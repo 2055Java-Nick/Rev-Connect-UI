@@ -23,8 +23,10 @@ const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
        //login success
        let userInfo = response.data;
        console.log("userInfo.username",userInfo.username)
+       // get return by Json file for user info
        localStorage.setItem("userInfo",JSON.stringify(userInfo));
-       alert("login success,welcome "+userInfo.username)
+       // give a alert to User
+       alert("login success,welcome "+ userInfo.username)
        
        // transfer tab to Revature
        window.location.href="https://revature.com/"
