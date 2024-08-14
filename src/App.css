@@ -5,6 +5,12 @@
   text-align: center;
 }
 
+.custom-input::placeholder {
+  font-size: 2px; /* placeholder font size*/
+  color: #888; /* placeholder color */
+}
+
+
 .logo {
   height: 6em;
   padding: 1.5em;
