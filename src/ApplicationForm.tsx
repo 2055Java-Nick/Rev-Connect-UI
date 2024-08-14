@@ -1,10 +1,6 @@
 import './App.css'; 
 import {useState} from "react"; 
-<<<<<<< Updated upstream
-import {validateEmail} from "../src/utils"; 
-=======
 import {validateEmail} from "./utils"; 
->>>>>>> Stashed changes
  
 const PasswordErrorMessage = () => { 
  return ( 
