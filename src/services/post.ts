@@ -1,10 +1,5 @@
 import apiContext from "./api";
-
-interface Post {
-  postId: number;
-  postedBy: string;
-  postText: string;
-}
+import { Post } from "../models/post";
 
 export const getPosts = async (): Promise<Post[]> => {
   const response = await apiContext.get("/posts");
