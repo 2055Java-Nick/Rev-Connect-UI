@@ -7,6 +7,7 @@ const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [firstname, setFirstName] = useState<string>('');
   const [lastname, setLastName] = useState<string>('');
+  const [userNameExists, setUserNameExists] = useState<boolean>(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,18 +18,91 @@ const Register: React.FC = () => {
       return;
     }
 
-    const user = {
-      username,
-      email,
-      password,
-      firstname, 
-      lastname,
-    };
+    // const user = {
+    //   username,
+    //   email,
+    //   password,
+    //   firstname, 
+    //   lastname,
+    // };
 
-    console.log("User registered: ", user);
+    // console.log("User registered: ", user);
     // Add your registration logic here (e.g., API call)
   };
 
+
+const checkUerName = (text: String): void => {
+  const BASE_URL = "http://localhost:8080/checkUserId";
+
+  var formData: FormData = new FormData();
+  formData.append("userName",text.trim().toString())
+
+  console.log("User FormData: ", text.trim().toString());
+
+  const requestOptions: RequestInit = {
+      method: 'POST',
+      // headers: myHeaders,
+      redirect: 'follow',
+      body:formData
+  };
+
+  fetch(BASE_URL, requestOptions)
+      // .then(response => response.json())  // Changed to .json() for proper parsing
+      .then(response => response.json())  // Parse the response as JSON
+    .then(data => {
+      console.log("API Response (boolean):", data);  // Log the boolean response
+      if (data) {
+        console.log("Username exists.");
+        setUserNameExists(true);
+        alert("Username already exists.");
+      } 
+      else{
+        setUserNameExists(false);
+      }
+    })
+    .catch(error => console.log('Error:', error));
+}
+
+const registerUser = (): void => {
+  if(userNameExists){
+    alert("Username already exists.")
+  }
+  else{
+  const BASE_URL = "http://localhost:8080/register";
+
+  var formData: FormData = new FormData();
+  formData.append("firstName",firstname)
+  formData.append("lastName",lastname)
+  formData.append("userName",username)
+  formData.append("email",email)
+  formData.append("password",password)
+  formData.append("isBusiness","false")
+
+  console.log("User FormData: ", formData);
+
+  const requestOptions: RequestInit = {
+      method: 'POST',
+      redirect: 'follow',
+      body:formData
+  };
+  fetch(BASE_URL, requestOptions)
+  .then(async response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const responseData = await response.text();
+          console.log("Registered User:", responseData);
+          setUserNameExists(true);
+          alert("Registration successful!");
+          console.log("Registered User Data:", responseData);
+        })
+        .catch(error => {
+          console.log('Error:', error);
+          alert("Registration failed. Please try again.");
+        });
+    }
+}
+  
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -37,7 +111,10 @@ const Register: React.FC = () => {
           type="text"
           id="username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            setUsername(e.target.value);
+            checkUerName(e.target.value);
+          }}
           required
         />
       </div>
@@ -97,7 +174,7 @@ const Register: React.FC = () => {
         />
       </div>
 
-      <button type="submit">Register</button>
+      <button type="submit" onClick={registerUser}>Register</button>
     </form>
   );
 };
