@@ -4,8 +4,22 @@ import { render, screen } from "@testing-library/react"
 //import userEvent from "@testing-library/user-event"
 
 describe("Simple working test", () => {
-    it('the title is visible', () => {
+    it('the welcome banner is visible', () => {
         render(<App />)
-        expect(screen.getByText(/Vite \+ React/i)).toBeInTheDocument()
+        
+        const headerElement = screen.getByText(/Welcome to RevConnect!/i); 
+
+        expect(headerElement).toBeInTheDocument(); 
     })
 })
+
+describe("Simple working test 2", () => {
+    it('the register banner is visible', () => {
+        render(<App />)
+        
+        const headerElement = screen.getByText(/Register Here!/i); 
+
+        expect(headerElement).toBeInTheDocument(); 
+    })
+})
+

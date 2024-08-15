@@ -7,7 +7,8 @@ import Register from './Register'
 const App: React.FC = () => {
   return (
     <div>
-      <h1>Register</h1>
+      <h1>Welcome to RevConnect!</h1>
+      <h1>Register Here!</h1>
       <Register />
     </div>
   );
