@@ -186,7 +186,7 @@ const registerUser = (): void => {
         <input type="checkbox" id="accountType" name="accountType" value="true" style={{ marginRight: '130px' }} />
       </div>
 
-      <button type="submit" onClick={registerUser}>Register</button>
+      <button type="submit" name='submitButton' onClick={registerUser}>Register</button>
     </form>
     </div>
   );
