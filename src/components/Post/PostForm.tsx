@@ -1,19 +1,27 @@
-import { useState } from "react";
-import { createPost } from "../../services/post";
-import { NewPost } from "../../models/post";
+import { useEffect, useState } from "react";
+import { createPost, getPosts } from "../../services/post";
+import { NewPost, Post } from "../../models/post";
 
 const Form = () => {
   const [postContent, setPostContent] = useState("");
+  const [posts, setPosts] = useState([] as unknown as Post);
+  const getAllPosts = async () => {
+    const response = await getPosts();
+    if (response) setPosts(response);
+  };
+  useEffect(() => {
+    getAllPosts();
+  }, []);
 
-  const handleSubmit = () => {
-    console.log(postContent);
+  const handleSubmit = async () => {
     const post: NewPost = {
-      postedBy: "userID",
+      postedBy: 9999,
       postText: postContent,
-      timePostedEpoch: new Date(),
+      timePostedEpoch: Math.floor(new Date().getTime() / 1000),
     };
 
-    createPost(post);
+    const response = await createPost(post);
+    console.log(response);
   };
 
   return (

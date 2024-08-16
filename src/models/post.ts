@@ -1,12 +1,12 @@
 export interface Post {
   postId: number;
   postText: string;
-  postedBy: string;
-  timePostedEpoch: Date;
+  postedBy: number;
+  timePostedEpoch: number;
 }
 
 export interface NewPost {
   postText: string;
-  postedBy: string;
-  timePostedEpoch: Date;
+  postedBy: number;
+  timePostedEpoch: number;
 }
