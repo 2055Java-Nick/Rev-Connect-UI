@@ -31,7 +31,7 @@ const Register: React.FC = () => {
   };
 
 
-const checkUerName = (text: String): void => {
+const checkUserName = (text: String): void => {
   const BASE_URL = "http://localhost:8080/checkUserId";
 
   var formData: FormData = new FormData();
@@ -113,7 +113,7 @@ const registerUser = (): void => {
           value={username}
           onChange={(e) => {
             setUsername(e.target.value);
-            checkUerName(e.target.value);
+            checkUserName(e.target.value);
           }}
           required
         />
