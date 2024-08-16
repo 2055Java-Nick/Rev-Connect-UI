@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import "./Register.css";
+import RevconnectLogo from '../assets/Revconnect.png'
+
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -104,6 +107,10 @@ const registerUser = (): void => {
 }
   
   return (
+    <div >
+      <img src={RevconnectLogo} alt="RevConnect Logo" width={"32%"} height={"4%"}/>
+      <h1>Welcome to RevConnect!</h1>
+      <h1>Register Here!</h1>
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="username">Username:</label>
@@ -176,6 +183,7 @@ const registerUser = (): void => {
 
       <button type="submit" onClick={registerUser}>Register</button>
     </form>
+    </div>
   );
 };
 
