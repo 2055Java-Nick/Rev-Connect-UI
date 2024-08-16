@@ -1,5 +1,5 @@
 import apiContext from "./api";
-import { Post } from "../models/post";
+import { NewPost, Post } from "../models/post";
 
 export const getPosts = async (): Promise<Post[]> => {
   const response = await apiContext.get("/posts");
@@ -13,7 +13,7 @@ export const getPostById = async (id: number): Promise<Post> => {
   return data;
 };
 
-export const createPost = async (post: Post): Promise<Post> => {
+export const createPost = async (post: NewPost): Promise<Post> => {
   const response = await apiContext.post("/post", post);
   const { data } = response;
   return data;
