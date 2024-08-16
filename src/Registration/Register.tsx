@@ -181,6 +181,11 @@ const registerUser = (): void => {
         />
       </div>
 
+      <div>
+        <label htmlFor="accountType" style={{ marginRight: '10px' }}>Business Account:</label>
+        <input type="checkbox" id="accountType" name="accountType" value="true" style={{ marginRight: '130px' }} />
+      </div>
+
       <button type="submit" onClick={registerUser}>Register</button>
     </form>
     </div>
