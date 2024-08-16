@@ -4,14 +4,14 @@ import { NewPost, Post } from "../../models/post";
 
 const Form = () => {
   const [postContent, setPostContent] = useState("");
-  const [posts, setPosts] = useState([] as unknown as Post);
+  const [posts, setPosts] = useState<Post[]>([]);
   const getAllPosts = async () => {
     const response = await getPosts();
     if (response) setPosts(response);
   };
   useEffect(() => {
     getAllPosts();
-  }, []);
+  }, [posts]);
 
   const handleSubmit = async () => {
     const post: NewPost = {
