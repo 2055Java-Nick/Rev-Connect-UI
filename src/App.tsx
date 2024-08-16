@@ -1,7 +1,7 @@
 //import { useState } from 'react'
 import revConnectLogo from './assets/Revconnect.png'
 import './App.css'
-import RegistrationForm from './RegistrationForm';
+import RegistrationForm from './components/RegistrationForm';
 
 function App() {
 
