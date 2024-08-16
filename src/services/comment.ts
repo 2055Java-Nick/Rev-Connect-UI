@@ -1,10 +1,10 @@
 import apiContext from "./api";
-import { Comment } from "../models/Comment";
+import { Comment, CommentResponse } from "../models/Comment";
 
 export const getCommentsForPost = async (
   postId: number,
   userId: number
-): Promise<Comment[]> => {
+): Promise<CommentResponse[]> => {
   try {
     const response = await apiContext.get(`/${userId}/post/${postId}/comments`);
     return response.data;
@@ -15,9 +15,13 @@ export const getCommentsForPost = async (
 };
 
 export const createComment = async (comment: Comment): Promise<Comment> => {
-  const response = await apiContext.post("/comments", comment);
-  const { data } = response;
-  return data;
+  try {
+    const response = await apiContext.post("/comments", comment);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    throw error;
+  }
 };
 
 export const likeComment = async (
