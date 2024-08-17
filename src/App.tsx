@@ -1,24 +1,20 @@
-//import { useState } from 'react'
-import revConnectLogo from './assets/Revconnect.png'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RegistrationForm from './components/RegistrationForm';
+import LandingPage from './components/LandingPage';
+import './App.css'; // Import the CSS file
 
-function App() {
-
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://revature.com/" target="_blank">
-          <img src={revConnectLogo} className="logo" alt="Revature logo" />
-        </a>
+    <Router>
+      <div className="app-container">
+        <Routes>
+          <Route path="/welcome/:name" element={<LandingPage />} />
+          <Route path="/" element={<RegistrationForm />} />
+        </Routes>
       </div>
-      <h2>Registration Page</h2>
-      <div>
+    </Router>
+  );
+};
 
-      <RegistrationForm />
-    </div>
-    </>
-  )
-}
-
-export default App
+export default App;
