@@ -1,13 +1,20 @@
-// src/App.tsx
 import './App.css';
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import { sendConnectionRequest, getPendingConnectionRequests, findConnectionsByUserId, acceptConnectionRequest, rejectConnectionRequest,searchUser } from './services/api/connections.service';
+import {
+  sendConnectionRequest,
+  getPendingConnectionRequests,
+  findConnectionsByUserId,
+  acceptConnectionRequest,
+  rejectConnectionRequest,
+  searchUser,
+} from './services/api/connections.service';
 import userPic from './assets/user.jpg';
-import axios from 'axios'
 
 interface User {
   id: number;
   username: string;
+  requestId?: number;
+  connectionId?: number;
 }
 
 const App: React.FC = () => {
@@ -15,11 +22,7 @@ const App: React.FC = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [pendingRequests, setPendingRequests] = useState<User[]>([]);
   const [myConnections, setMyConnections] = useState<User[]>([]);
-  const [userId, setUserId] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetchUserId();
-  }, []);
+  const userId = 1;
 
   useEffect(() => {
     if (userId !== null) {
@@ -28,15 +31,6 @@ const App: React.FC = () => {
     }
   }, [userId]);
 
-  const fetchUserId = async () => {
-    try {
-      const response = await axios.get('/api/getUserId');
-      setUserId(response.data.userId);
-    } catch (error) {
-      console.error('Error fetching user ID:', error);
-    }
-  };
-
   const handleSearchChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -44,7 +38,7 @@ const App: React.FC = () => {
     if (query.trim()) {
       try {
         const response = await searchUser(query);
-        setSearchResults(response.data);
+        setSearchResults(response);
       } catch (error) {
         console.error('Error searching users:', error);
         setSearchResults([]);
@@ -58,7 +52,13 @@ const App: React.FC = () => {
     if (userId !== null) {
       try {
         const data = await getPendingConnectionRequests(userId);
-        setPendingRequests(data.map((req: any) => ({ id: req.requester.id, username: req.requester.username })));
+        setPendingRequests(
+          data.map((req: any) => ({
+            requestId: req.connectionId,
+            id: req.requester.accountId,
+            username: req.requester.username,
+          }))
+        );
       } catch (error) {
         console.error('Error fetching pending requests:', error);
       }
@@ -69,7 +69,19 @@ const App: React.FC = () => {
     if (userId !== null) {
       try {
         const data = await findConnectionsByUserId(userId);
-        setMyConnections(data.map((conn: any) => ({ id: conn.recipient.id, username: conn.recipient.username })));
+        setMyConnections(
+          data.map((conn: any) => ({
+            connectionId: conn.connectionId,
+            id:
+              conn.recipient.accountId !== userId
+                ? conn.recipient.accountId
+                : conn.requester.accountId,
+            username:
+              conn.recipient.accountId !== userId
+                ? conn.recipient.username
+                : conn.requester.username,
+          }))
+        );
       } catch (error) {
         console.error('Error fetching connections:', error);
       }
@@ -80,7 +92,7 @@ const App: React.FC = () => {
     if (userId !== null) {
       try {
         await sendConnectionRequest(userId, recipientId);
-        fetchPendingRequests(); 
+        fetchPendingRequests();
       } catch (error) {
         console.error('Error sending connection request:', error);
       }
@@ -90,7 +102,7 @@ const App: React.FC = () => {
   const handleAcceptRequest = async (requestId: number) => {
     try {
       await acceptConnectionRequest(requestId);
-      fetchPendingRequests(); 
+      fetchPendingRequests();
       fetchMyConnections();
     } catch (error) {
       console.error('Error accepting request:', error);
@@ -136,7 +148,12 @@ const App: React.FC = () => {
                   <span className="username">{user.username}</span>
                 </div>
                 <div className="actions">
-                  <button className="send-request-btn" onClick={() => handleSendConnectionRequest(user.id)}>Send Request</button>
+                  <button
+                    className="send-request-btn"
+                    onClick={() => handleSendConnectionRequest(user.id)}
+                  >
+                    Send Request
+                  </button>
                 </div>
               </li>
             ))}
@@ -147,14 +164,28 @@ const App: React.FC = () => {
           <h2>Pending Connection Requests</h2>
           <ul>
             {pendingRequests.map((user) => (
-              <li key={user.id}>
+              <li key={user.requestId}>
                 <div className="request-details">
-                  <img src={userPic} alt={user.username} className="profile-pic" />
+                  <img
+                    src={userPic}
+                    alt={user.username}
+                    className="profile-pic"
+                  />
                   <span className="username">{user.username}</span>
                 </div>
                 <div className="actions">
-                  <button className="accept-btn" onClick={() => handleAcceptRequest(user.id)}>Accept</button>
-                  <button className="reject-btn" onClick={() => handleRejectRequest(user.id)}>Reject</button>
+                  <button
+                    className="accept-btn"
+                    onClick={() => handleAcceptRequest(user.requestId!)}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="reject-btn"
+                    onClick={() => handleRejectRequest(user.requestId!)}
+                  >
+                    Reject
+                  </button>
                 </div>
               </li>
             ))}
@@ -165,9 +196,13 @@ const App: React.FC = () => {
           <h2>My Connections</h2>
           <ul>
             {myConnections.map((user) => (
-              <li key={user.id}>
+              <li key={user.connectionId}>
                 <div className="connection-details">
-                  <img src={userPic} alt={user.username} className="profile-pic" />
+                  <img
+                    src={userPic}
+                    alt={user.username}
+                    className="profile-pic"
+                  />
                   <span className="username">{user.username}</span>
                 </div>
                 <div className="actions">
