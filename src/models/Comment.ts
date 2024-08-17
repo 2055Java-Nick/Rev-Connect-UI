@@ -1,9 +1,13 @@
+
 export interface Comment {
-  commentId: number;
+  commentId?: number; 
   userId: number;
   postId: number;
   text: string;
-  created_at: string;
-  updated_at: string;
-  likes: number; // not an attribute on comment table
+  timePosted?: string; 
+
+}
+export interface CommentResponse {
+  comment: Comment;
+  likesCount: number;
 }

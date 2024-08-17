@@ -4,6 +4,7 @@ import { Comment as CommentModel } from "../models/Comment";
 interface CommentCardProps extends CommentModel {
   onLike: () => void;
   avatarUrl: string;
+  
 }
 
 const CommentCard = ({ text, avatarUrl, likes, onLike }: CommentCardProps) => {
