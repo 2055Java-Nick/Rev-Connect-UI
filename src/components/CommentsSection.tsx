@@ -24,10 +24,12 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
 			}
 		}
 		fetchComments()
-    console.log(comments);
-    
+		console.log(comments)
 	}, [postId, userId])
 
+	useEffect(() => {
+		console.log(comments)
+	}, [comments])
 	const handleAddComment = async () => {
 		if (newComment.trim() !== "") {
 			try {
@@ -78,15 +80,16 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
 					</button>
 				</div>
 			</div>
-
+			
 			<h6 className='mt-4'>Comments</h6>
 			<div className='mb-3'>
 				{comments.map((comment) => (
 					<CommentCard
-						key={comment.commentId}
-						{...comment}
-						avatarUrl={commentAvatar} // Ensure default avatar
-						onLike={() => handleLikeComment(comment.commentId)}
+						key={comment.comment.commentId}
+						text={comment.comment.text}
+						avatarUrl={commentAvatar}
+						likesCount={comment.likesCount}
+						onLike={() => handleLikeComment(comment.comment.commentId)}
 					/>
 				))}
 			</div>

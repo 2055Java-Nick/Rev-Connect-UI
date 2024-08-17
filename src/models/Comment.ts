@@ -5,7 +5,6 @@ export interface Comment {
   postId: number;
   text: string;
   timePosted?: string; 
-
 }
 export interface CommentResponse {
   comment: Comment;

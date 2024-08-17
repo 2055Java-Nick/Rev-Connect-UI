@@ -4,13 +4,13 @@ import { Comment as CommentModel } from "../models/Comment";
 interface CommentCardProps extends CommentModel {
   onLike: () => void;
   avatarUrl: string;
-  
+  likesCount: number;
 }
 
-const CommentCard = ({ text, avatarUrl, likes, onLike }: CommentCardProps) => {
+const CommentCard = ({ text, avatarUrl, onLike, likesCount }: CommentCardProps) => {
   return (
     <div className="card mb-2">
-      <div className="card-body d-flex justify-content-center">
+      <div className="card-body d-flex">
         <div className="mr-3">
           <img
             src={avatarUrl}
@@ -29,7 +29,7 @@ const CommentCard = ({ text, avatarUrl, likes, onLike }: CommentCardProps) => {
             <button className="btn btn-outline-primary btn-sm" onClick={onLike}>
               Like
             </button>
-            <span className="ml-2">{likes} likes</span>
+            <span className="ml-2">{likesCount} likes</span>
           </div>
         </div>
       </div>
