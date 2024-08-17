@@ -1,15 +1,19 @@
 import './App.css'
-import Post from './components/Post'
+import Post from './components/PostPage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import CreatePost from './components/CreatePost';
 
 
 function App() {
   
 
   return (
-    <div>
-      <h1>Rev Connect</h1>
-      <Post />
-    </div>
+    <Router>
+      <Routes>
+          <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/posts" element={<Post />} />
+      </Routes>
+    </Router>
   )
 }
 
