@@ -53,16 +53,18 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
 
 	const handleLikeComment = async (commentId: number) => {
 		try {
-			const updatedComment = await likeComment(commentId, userId)
-			setComments(
-				comments.map((comment) =>
-					comment.commentId === updatedComment.commentId ? updatedComment : comment
-				)
+		  const updatedComment = await likeComment(commentId, userId);
+		  setComments(
+			comments.map((comment) =>
+			  comment.comment.commentId === updatedComment.commentId
+				? { comment: updatedComment, likesCount: comment.likesCount }
+				: comment
 			)
+		  );
 		} catch (error) {
-			console.error("Error liking comment:", error)
+		  console.error("Error liking comment:", error);
 		}
-	}
+	  };
 
 	return (
 		<div>
@@ -86,9 +88,8 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
 				{comments.map((comment) => (
 					<CommentCard
 						key={comment.comment.commentId}
-						text={comment.comment.text}
 						avatarUrl={commentAvatar}
-						likesCount={comment.likesCount}
+						commentResponse={comment}
 						onLike={() => handleLikeComment(comment.comment.commentId)}
 					/>
 				))}

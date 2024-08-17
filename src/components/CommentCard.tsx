@@ -1,13 +1,13 @@
 import React from "react";
-import { Comment as CommentModel } from "../models/Comment";
+import { Comment as CommentModel, CommentResponse } from "../models/Comment";
 
 interface CommentCardProps extends CommentModel {
-  onLike: () => void;
+  onLike: () => Promise<void>;
   avatarUrl: string;
-  likesCount: number;
+  commentResponse: CommentResponse
 }
 
-const CommentCard = ({ text, avatarUrl, onLike, likesCount }: CommentCardProps) => {
+const CommentCard = ({avatarUrl,commentResponse, onLike }:CommentCardProps) => {
   return (
     <div className="card mb-2">
       <div className="card-body d-flex">
@@ -24,12 +24,12 @@ const CommentCard = ({ text, avatarUrl, onLike, likesCount }: CommentCardProps) 
           />
         </div>
         <div className="">
-          <p className="mb-0">{text}</p>
+          <p className="mb-0">{commentResponse.comment.text}</p>
           <div className="d-flex align-items-center mt-2">
             <button className="btn btn-outline-primary btn-sm" onClick={onLike}>
               Like
             </button>
-            <span className="ml-2">{likesCount} likes</span>
+            <span className="ml-2">{commentResponse.likesCount} likes</span>
           </div>
         </div>
       </div>
