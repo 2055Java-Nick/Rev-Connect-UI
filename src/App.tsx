@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import RegistrationForm from './components/RegistrationForm';
-import LandingPage from './components/LandingPage';
+import RegistrationForm from './pages/RegistrationForm/RegistrationForm';
+import LandingPage from './pages/LandingPage/LandingPage';
 import './App.css'; // Import the CSS file
 
 const App: React.FC = () => {

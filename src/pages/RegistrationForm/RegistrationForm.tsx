@@ -1,9 +1,9 @@
 import React from 'react';
 import { Form, Input, Button, Select, Checkbox } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { onFinish, onFinishFailed } from '../formHandlers';
-import './RegistrationForm.css'; // Import the CSS file
-import logo from '../assets/Revconnect.png'; // Import the image
+import { onFinish, onFinishFailed } from '../../formHandlers';
+import '../../styles/pages/RegistrationForm.css'; // Correct the import path
+import logo from '../../assets/Revconnect.png'; // Import the image
 
 const { Option } = Select;
 
@@ -27,7 +27,7 @@ const RegistrationForm: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="form-container">
+    <div className="registration-form-container">
       <img src={logo} alt="Logo" className="form-logo" /> {/* Add the image */}
       <Form
         name="registration"
@@ -36,11 +36,13 @@ const RegistrationForm: React.FC = () => {
         initialValues={{
           accounttype: 'user'
         }}
+        className="registration-form"
       >
         <Form.Item<FieldType>
           label="Firstname"
           name="firstname"
           rules={[{ required: true, message: 'Please input your firstname!' }]}
+          className="registration-form-field"
         >
           <Input />
         </Form.Item>
@@ -49,6 +51,7 @@ const RegistrationForm: React.FC = () => {
           label="Lastname"
           name="lastname"
           rules={[{ required: true, message: 'Please input your lastname!' }]}
+          className="registration-form-field"
         >
           <Input />
         </Form.Item>
@@ -57,6 +60,7 @@ const RegistrationForm: React.FC = () => {
           label="Username"
           name="username"
           rules={[{ required: true, message: 'Please input your username!' }]}
+          className="registration-form-field"
         >
           <Input />
         </Form.Item>
@@ -65,6 +69,7 @@ const RegistrationForm: React.FC = () => {
           label="Password"
           name="password"
           rules={[{ required: true, message: 'Please input your password!' }]}
+          className="registration-form-field"
         >
           <Input.Password />
         </Form.Item>
@@ -73,6 +78,7 @@ const RegistrationForm: React.FC = () => {
           label="Email"
           name="email"
           rules={[{ required: true, message: 'Please input your email!', type: 'email' }]}
+          className="registration-form-field"
         >
           <Input />
         </Form.Item>
@@ -81,6 +87,7 @@ const RegistrationForm: React.FC = () => {
           label="Account Type"
           name="accounttype"
           rules={[{ required: true, message: 'Please select your account type!' }]}
+          className="registration-form-field"
         >
           <Select placeholder="Please Select">
             <Option value="user">Personal</Option>
@@ -91,13 +98,14 @@ const RegistrationForm: React.FC = () => {
         <Form.Item<FieldType>
           name="remember"
           valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
+          wrapperCol={{ offset: 0, span: 24 }}
+          className="registration-form-field"
         >
           <Checkbox>Remember me</Checkbox>
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+        <Form.Item wrapperCol={{ offset: 0, span: 24 }} className="registration-form-field">
+          <Button type="primary" htmlType="submit" className="registration-form-button">
             Register
           </Button>
         </Form.Item>

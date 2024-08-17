@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { FormProps } from 'antd';
-import { FieldType } from './components/RegistrationForm';
+import { FieldType } from './pages/RegistrationForm/RegistrationForm';
 import { useNavigate } from 'react-router-dom';
 
 export const onFinish = (navigate: ReturnType<typeof useNavigate>): FormProps<FieldType>['onFinish'] => async (values) => {
