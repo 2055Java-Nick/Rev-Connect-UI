@@ -1,28 +1,24 @@
-import { useState } from 'react'
-
+import { UserProvider } from './components/Context/UserContext';
 import{ BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 import Login from "./components/Login/Login";
 
 function App() {
 
-  const handleLoginSubmit = (username: string, password: string) => {
-    console.log('Username:', username);
-    console.log('Password:', password);
-    
-};
 
 
   return (
     <>
     {/* <Login/> */}
-      
-      <BrowserRouter >
-      <Routes >
-      <Route path="/login" element={<Login onSubmit={handleLoginSubmit} />} />
-        {/* < Route path="/login" element={<login />} /> */}
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-      </BrowserRouter>
+      <UserProvider >
+        
+        <BrowserRouter >
+        <Routes >
+        <Route path="/login" element={<Login />} />
+          {/* < Route path="/login" element={<login />} /> */}
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+        </BrowserRouter>
+      </UserProvider>
 
         
 

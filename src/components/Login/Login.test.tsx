@@ -2,11 +2,21 @@ import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, it, expect, vi } from 'vitest';
+import axios from 'axios';
 import Login from './Login';
+import { UserProvider } from '../Context/UserContext';
+
+// Mocking axios
+vi.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('Login Component', () => {
+    const renderWithProvider = (ui: React.ReactElement) => {
+        return render(<UserProvider>{ui}</UserProvider>);
+    };
+
     it('renders the login form', () => {
-        render(<Login onSubmit={vi.fn()} />);
+        renderWithProvider(<Login />);
         
         expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
@@ -14,7 +24,7 @@ describe('Login Component', () => {
     });
 
     it('displays validation errors when form is submitted with empty fields', () => {
-        render(<Login onSubmit={vi.fn()} />);
+        renderWithProvider(<Login />);
         
         fireEvent.submit(screen.getByRole('button', { name: /login/i }));
         
@@ -22,31 +32,44 @@ describe('Login Component', () => {
         expect(screen.getByText(/password is required/i)).toBeInTheDocument();
     });
 
-    it('calls onSubmit with username and password when form is valid', () => {
-        const mockOnSubmit = vi.fn();
-        render(<Login onSubmit={mockOnSubmit} />);
+    it('submits the form with username and password when form is valid', async () => {
+        // Mocking the API response
+        mockedAxios.post.mockResolvedValueOnce({
+            data: { id: '123', username: 'testuser' },
+        });
+
+        renderWithProvider(<Login />);
         
         fireEvent.change(screen.getByLabelText(/username/i), {
-        target: { value: 'testuser' },
+            target: { value: 'testuser' },
         });
         fireEvent.change(screen.getByLabelText(/password/i), {
-        target: { value: 'password123' },
+            target: { value: 'password123' },
         });
         
         fireEvent.submit(screen.getByRole('button', { name: /login/i }));
         
-        expect(mockOnSubmit).toHaveBeenCalledWith('testuser', 'password123');
-        expect(screen.getByText(/login successful/i)).toBeInTheDocument();
+        // Wait for the success message to appear
+        const successMessage = await screen.findByText(/login successful/i);
+        expect(successMessage).toBeInTheDocument();
+        
+        // Ensure the axios post was called with the correct parameters
+        expect(mockedAxios.post).toHaveBeenCalledWith('http://localhost:8080/login', null, {
+            params: {
+                userId: 'testuser',
+                password: 'password123',
+            },
+        });
     });
 
     it('clears error messages after successful submission', () => {
-        render(<Login onSubmit={vi.fn()} />);
+        renderWithProvider(<Login />);
         
         fireEvent.change(screen.getByLabelText(/username/i), {
-        target: { value: 'testuser' },
+            target: { value: 'testuser' },
         });
         fireEvent.change(screen.getByLabelText(/password/i), {
-        target: { value: 'password123' },
+            target: { value: 'password123' },
         });
         
         fireEvent.submit(screen.getByRole('button', { name: /login/i }));
