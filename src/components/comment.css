@@ -1,0 +1,11 @@
+.card {
+  padding: 1rem;
+}
+
+.card-body {
+  padding: 0.5rem;
+}
+
+.card-body p {
+  margin-bottom: 0;
+}
