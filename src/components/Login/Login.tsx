@@ -13,18 +13,6 @@ const[password, setPassword] = useState<string>('');
 const[errors, setErrors] = useState<ValidationError>({});
 const[successMessage,setSuccessMessage] = useState<string | null>(null);
 
-// const handleSubmit = (event: React.FormEvent) => { 
-//     event.preventDefault();    
-//     const validationErrors = ValidateLoginForm (username, password);    
-//     if(Object.keys (validationErrors).length === 0) {
-//         onSubmit(username, password); 
-//         setSuccessMessage(true);
-//     }
-//     else{ 
-//         setErrors(validationErrors); 
-//     } 
-// };
-
 
 const handleSubmit = (event: React.FormEvent) => {     
     event.preventDefault();    
@@ -48,27 +36,40 @@ const handleSubmit = (event: React.FormEvent) => {
         <div className="container col-md-4 col-sm-12" >
         {successMessage &&  <p style={{color: "green"}} className="success-message">{successMessage}</p> }
             <form onSubmit={handleSubmit}>
-                {/* <p style={{color: "red"}}>{successMessage}</p> */}
-                
-                <div className="mb-3" >
+               
+                <div className="" >
                     {errors.username && <div className='text-danger'>{errors.username}</div>}
-                    <label htmlFor="username" className='form-label'>Username: </label>
-                    <input onChange={(e) => setUsername(e.target.value)}
-                    type="text" className ="form-control" id="username" placeholder='Enter your username' name="username" 
-                    />
+                    <div className="d-flex align-items-center p-3">
+                    <div className="col-auto">
+                        <label htmlFor="username" className='form-label mb-0 me-2'>Username: </label>
+                    </div>
+                    <div className="col-auto">
+                        <input onChange={(e) => setUsername(e.target.value)}
+                        type="text" className ="form-control" id="username" placeholder='Enter your username' name="username" 
+                        />
+                    </div>
+                    </div>
                 </div>
-                <div className="mb-3" >
+                <div className="" >
                     {errors.password && <div className='text-danger'>{errors.password}</div>}
-                    <label htmlFor="password" className='form-label'>Password: </label>
-                    <input onChange={(e) => setPassword(e.target.value)}
-                    type="password" className ="form-control" id="password" placeholder='Enter your password' name="password" 
-                    />
+                    <div className="d-flex align-items-center p-3">
+                    <div className="col-auto">
+                        <label htmlFor="password" className='form-label mb-0 me-2'>Password: </label>
+                    </div>
+                    <div className="col-auto">
+                        <input onChange={(e) => setPassword(e.target.value)}
+                        type="password" className ="form-control" id="password" placeholder='Enter your password' name="password" 
+                        />
+                    </div>
+                    </div>
                 </div>
-
-                <button className="btn btn-lg btn primary" type="submit"  >
+                
+                
+                <button className="btn btn-primary" type="submit"  >
                     Login
                 </button>
             </form>
+            <a href="/forgot-password">forgot password?</a>
 
         </div>
       
