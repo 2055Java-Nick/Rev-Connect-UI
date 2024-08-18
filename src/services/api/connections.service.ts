@@ -48,6 +48,18 @@ export const rejectConnectionRequest = async (requestId: number) => {
     }
 };
 
+// Remove Connection:
+export const removeConnection = async (connectionId: number) => {
+    try {
+      const response = await api.delete(`/remove/${connectionId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error removing connection:', error);
+      throw error;
+    }
+  };
+  
+
 // List Pending Connection Requests:
 export const getPendingConnectionRequests = async (userId: number) => {
     try {
@@ -82,12 +94,15 @@ export const findConnectionsByUserId = async (userId: number) => {
 }
 
     // List users by query:
-    export const searchUser = async (query: string) => {
+    export const searchUser = async (query: string, currentUserId: number) => {
         try {
-            const response = await api.get(`/search/${query}`);
-            return response.data;
+          const response = await api.get(`/search/${query}`, {
+            params: { currentUserId },
+          });
+          return response.data;
         } catch (error) {
-            console.error('Error fetching user:', error);
-            throw error;
+          console.error('Error fetching user:', error);
+          throw error;
         }
-    }
+      };
+      

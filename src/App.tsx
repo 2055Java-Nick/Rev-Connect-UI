@@ -1,4 +1,3 @@
-import './App.css';
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import {
   sendConnectionRequest,
@@ -6,13 +5,20 @@ import {
   findConnectionsByUserId,
   acceptConnectionRequest,
   rejectConnectionRequest,
+  removeConnection,
   searchUser,
 } from './services/api/connections.service';
 import userPic from './assets/user.jpg';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './styles/App.css';
+import './styles/ToastStyles.css';
 
 interface User {
   id: number;
   username: string;
+  isSameUser: boolean;
+  hasPendingRequest: boolean;
   requestId?: number;
   connectionId?: number;
 }
@@ -22,13 +28,11 @@ const App: React.FC = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [pendingRequests, setPendingRequests] = useState<User[]>([]);
   const [myConnections, setMyConnections] = useState<User[]>([]);
-  const userId = 1;
+  const userId = 2; // Replace with dynamic user ID logic(accessing it from localStorage after login)
 
   useEffect(() => {
-    if (userId !== null) {
-      fetchPendingRequests();
-      fetchMyConnections();
-    }
+    fetchPendingRequests();
+    fetchMyConnections();
   }, [userId]);
 
   const handleSearchChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +41,7 @@ const App: React.FC = () => {
 
     if (query.trim()) {
       try {
-        const response = await searchUser(query);
+        const response = await searchUser(query, userId);
         setSearchResults(response);
       } catch (error) {
         console.error('Error searching users:', error);
@@ -49,77 +53,97 @@ const App: React.FC = () => {
   };
 
   const fetchPendingRequests = async () => {
-    if (userId !== null) {
-      try {
-        const data = await getPendingConnectionRequests(userId);
-        setPendingRequests(
-          data.map((req: any) => ({
-            requestId: req.connectionId,
-            id: req.requester.accountId,
-            username: req.requester.username,
-          }))
-        );
-      } catch (error) {
-        console.error('Error fetching pending requests:', error);
-      }
+    try {
+      const data = await getPendingConnectionRequests(userId);
+      const mappedRequests = data.map((req: any) => ({
+        requestId: req.connectionId,
+        id: req.requester.accountId,
+        username: req.requester.username,
+      }));
+      setPendingRequests(mappedRequests);
+    } catch (error) {
+      console.error('Error fetching pending requests:', error);
     }
   };
 
   const fetchMyConnections = async () => {
-    if (userId !== null) {
-      try {
-        const data = await findConnectionsByUserId(userId);
-        setMyConnections(
-          data.map((conn: any) => ({
-            connectionId: conn.connectionId,
-            id:
-              conn.recipient.accountId !== userId
-                ? conn.recipient.accountId
-                : conn.requester.accountId,
-            username:
-              conn.recipient.accountId !== userId
-                ? conn.recipient.username
-                : conn.requester.username,
-          }))
-        );
-      } catch (error) {
-        console.error('Error fetching connections:', error);
-      }
+    try {
+      const data = await findConnectionsByUserId(userId);
+      const mappedConnections = data.map((conn: any) => ({
+        connectionId: conn.connectionId,
+        id:
+          conn.recipient.accountId !== userId
+            ? conn.recipient.accountId
+            : conn.requester.accountId,
+        username:
+          conn.recipient.accountId !== userId
+            ? conn.recipient.username
+            : conn.requester.username,
+      }));
+      setMyConnections(mappedConnections);
+    } catch (error) {
+      console.error('Error fetching connections:', error);
     }
   };
 
   const handleSendConnectionRequest = async (recipientId: number) => {
-    if (userId !== null) {
-      try {
+    try {
+      if (recipientId !== userId) {
         await sendConnectionRequest(userId, recipientId);
-        fetchPendingRequests();
+        toast.success(`You have sent a connection request to ${searchResults.find(user => user.id === recipientId)?.username}!`);
+        await fetchPendingRequests();
+      } else {
+        toast.error("You cannot send a connection request to yourself.");
+      }
+    } catch (error) {
+      toast.error('Error sending connection request.');
+      console.error('Error sending connection request:', error);
+    }
+  };
+
+  const handleAcceptRequest = async (requestId?: number) => {
+    if (requestId) {
+      try {
+        await acceptConnectionRequest(requestId);
+        toast.success('Connection request accepted!');
+        await fetchPendingRequests();
+        await fetchMyConnections();
       } catch (error) {
-        console.error('Error sending connection request:', error);
+        toast.error('Error accepting request.');
+        console.error('Error accepting request:', error);
       }
     }
   };
 
-  const handleAcceptRequest = async (requestId: number) => {
-    try {
-      await acceptConnectionRequest(requestId);
-      fetchPendingRequests();
-      fetchMyConnections();
-    } catch (error) {
-      console.error('Error accepting request:', error);
+  const handleRejectRequest = async (requestId?: number) => {
+    if (requestId) {
+      try {
+        await rejectConnectionRequest(requestId);
+        toast.info('Connection request rejected.');
+        await fetchPendingRequests();
+      } catch (error) {
+        toast.error('Error rejecting request.');
+        console.error('Error rejecting request:', error);
+      }
     }
   };
 
-  const handleRejectRequest = async (requestId: number) => {
-    try {
-      await rejectConnectionRequest(requestId);
-      fetchPendingRequests();
-    } catch (error) {
-      console.error('Error rejecting request:', error);
+  const handleRemoveConnection = async (connectionId?: number) => {
+    if (connectionId) {
+      try {
+        await removeConnection(connectionId);
+        toast.info('Connection removed.');
+        await fetchMyConnections();
+      } catch (error) {
+        toast.error('Error removing connection.');
+        console.error('Error removing connection:', error);
+      }
     }
   };
 
   return (
     <div className="dashboard">
+      <ToastContainer />
       <header className="header">
         <div className="logo">
           <h1>Connections Dashboard</h1>
@@ -148,12 +172,18 @@ const App: React.FC = () => {
                   <span className="username">{user.username}</span>
                 </div>
                 <div className="actions">
-                  <button
-                    className="send-request-btn"
-                    onClick={() => handleSendConnectionRequest(user.id)}
-                  >
-                    Send Request
-                  </button>
+                  {user.isSameUser ? (
+                    <span className="info-text">This is you</span>
+                  ) : user.hasPendingRequest ? (
+                    <span className="info-text">Request already sent</span>
+                  ) : (
+                    <button
+                      className="send-request-btn"
+                      onClick={() => handleSendConnectionRequest(user.id)}
+                    >
+                      Send Request
+                    </button>
+                  )}
                 </div>
               </li>
             ))}
@@ -176,13 +206,13 @@ const App: React.FC = () => {
                 <div className="actions">
                   <button
                     className="accept-btn"
-                    onClick={() => handleAcceptRequest(user.requestId!)}
+                    onClick={() => handleAcceptRequest(user.requestId)}
                   >
                     Accept
                   </button>
                   <button
                     className="reject-btn"
-                    onClick={() => handleRejectRequest(user.requestId!)}
+                    onClick={() => handleRejectRequest(user.requestId)}
                   >
                     Reject
                   </button>
@@ -207,7 +237,12 @@ const App: React.FC = () => {
                 </div>
                 <div className="actions">
                   <button className="message-btn">Message</button>
-                  <button className="remove-btn">Remove</button>
+                  <button
+                    className="remove-btn"
+                    onClick={() => handleRemoveConnection(user.connectionId)}
+                  >
+                    Remove
+                  </button>
                 </div>
               </li>
             ))}
