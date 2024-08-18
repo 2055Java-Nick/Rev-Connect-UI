@@ -1,10 +1,9 @@
-
 export interface Comment {
-  commentId?: number; 
+  commentId?: number;
   userId: number;
   postId: number;
   text: string;
-  timePosted?: string; 
+  timePosted: string;
 }
 export interface CommentResponse {
   comment: Comment;
