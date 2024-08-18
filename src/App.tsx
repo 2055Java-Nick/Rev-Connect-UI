@@ -18,18 +18,19 @@ function onLoginPage(){
 
 const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
 
-  axios.post("http://192.168.68.78:8080/home/login", values).then((response) => {
+  axios.post("http://127.0.0.1:8080/home/login", values).then((response) => {
     console.log(response.status, response.data);
        //login success
        let userInfo = response.data;
-       console.log("userInfo.username",userInfo.username)
        // get return by Json file for user info
-       localStorage.setItem("userInfo",JSON.stringify(userInfo));
+       //localStorage.setItem("userInfo",JSON.stringify(userInfo));
+       //save tken info in localStorage
+       localStorage.setItem("token",userInfo.token);
        // give a alert to User
        alert("login success,welcome "+ userInfo.username)
        
        // transfer tab to Revature
-       window.location.href="https://revature.com/"
+      // window.location.href="https://revature.com/"
   }).catch(e => {
       //login faild 
       alert("Incorrect username or password, Please try again!")  
@@ -94,6 +95,7 @@ const App: React.FC = () => (
       <Button type="primary" htmlType="submit">
         Submit
       </Button>
+
     </Form.Item>
   </Form>
   </div>
