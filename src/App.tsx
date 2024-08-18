@@ -1,4 +1,5 @@
 
+
 import { UserProvider } from './components/Context/UserContext';
 import{ BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 import Login from "./components/Login/Login";
@@ -12,6 +13,7 @@ function App() {
   return (
     <>
     {/* <Login/> */}
+
       <UserProvider >
         
         <BrowserRouter >
@@ -23,6 +25,7 @@ function App() {
         </Routes>
         </BrowserRouter>
       </UserProvider>
+
 
         
     </>

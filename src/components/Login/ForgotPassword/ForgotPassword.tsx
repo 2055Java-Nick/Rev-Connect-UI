@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import { useState } from 'react';
  
@@ -78,10 +79,12 @@ const ForgotPassword = () => {
             )}
           </button>
         </form>
+
       </div>
     </div>
   );
 };
- 
+
 export default ForgotPassword;
  
+
