@@ -16,7 +16,7 @@ describe("CommentCard", () => {
     userId: 1,
     postId: 1,
     text: "This is a test comment",
-    timePosted: "2024-08-19 10:30:00 AM",
+    timePosted: new Date(),
   };
 
   const mockProps = {
@@ -45,7 +45,9 @@ describe("CommentCard", () => {
     expect(screen.getByText("Like (5)")).toBeInTheDocument();
 
     // Check if the time posted is displayed correctly
-    expect(screen.getByText("2024-08-19 10:30:00 AM")).toBeInTheDocument();
+    expect(
+      screen.getByText(mockComment.timePosted.toString())
+    ).toBeInTheDocument();
   });
 
   it("calls the likeComment function and updates the like count when the Like button is clicked", async () => {
