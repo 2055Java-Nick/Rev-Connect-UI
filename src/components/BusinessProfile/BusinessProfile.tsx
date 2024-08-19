@@ -9,31 +9,46 @@ interface BusinessProfileProps{
 
 const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
     let { id } = useParams();
-    const path_url = `http://localhost:8080/profiles/business/${id}`;
+
     const [bioText, setBioText] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [bioFormData, setBioFormData] = useState<string>('');
+    const [username, setUsername] = useState<string>('');
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [business, setBusiness] = useState(false);
+    const [profileUserId, setProfileUserId] = useState('');
 
-     useEffect(() => {
+
+    useEffect(() => {
         axios.get(path_url)
             .then((response) => {
-                setBioText(response.data.bioText)
-                setBioFormData(response.data.bioText)
+                setBioText(response.data.BIO_TEXT)
+                setBioFormData(response.data.BIO_TEXT)
+                setUsername(response.data.USERNAME)
+                setFirstName(response.data.FIRSTNAME)
+                setLastName(response.data.LASTNAME)
+                setEmail(response.data.EMAIL)
+                setBusiness(response.data.IS_BUSINESS)
+                setProfileUserId(response.data.USER_ID)
             })
             .catch((error) => {
                 console.error(error);
             });
-     }, []);
+    }, []);
 
-    // temporary User Object
+    // temporary AuthUser Object
     const tempUser = { 
-        id: 1234,
-        username: "TestDummy1234",
-        firstName: "John",
-        lastName: "Doe",
-        email: "testdummy1234@email.notreal",
-        isBusiness: true
+      id: 1234,
+      username: "TestDummy1234",
+      firstName: "John",
+      lastName: "Doe",
+      email: "testdummy1234@email.notreal",
+      isBusiness: true
     } 
+
+    const path_url = `http://localhost:8080/profiles/business/${id}`;
 
     const toggleEdit = () => {
         setIsEditing(!isEditing);
@@ -46,10 +61,10 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         axios.patch(path_url, {
-            bioText: bioFormData
+            bioText: bioFormData.trim()
         }).then((response) => {
-            setBioText(response.data.bioText)
-            setBioFormData(response.data.bioText)
+            setBioText(response.data.BIO_TEXT)
+            setBioFormData(response.data.BIO_TEXT)
         })
         .catch((error) => {
             console.error(error);
@@ -62,12 +77,14 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
 
   return (
     <div className='BusinessProfile'>
-        <h1 className='BusinessProfile_title'>Business Profile</h1>
-        <p>{ `${tempUser.firstName} ${tempUser.lastName}` }</p>
-        <p>{ tempUser.email }</p>
+        <h1 className='BusinessProfile_title'>
+          { username }
+        </h1>
+        <p>{ `${ firstName } ${ lastName }` }</p>
+        <p>{ email }</p>
         
         {
-            tempUser.isBusiness ? <h2>&lt; Links /&gt; Component (to be added)</h2> : null
+            business ? <h2>&lt; Links /&gt; Component (to be added)</h2> : null
         }
 
         { isEditing ? (
@@ -87,10 +104,14 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
         </form>
       ) : (
         <div>
-           <h2 className="BusinessProfile_bio">
+          <h2 className="BusinessProfile_bio">
             { bioText ? bioText : "Tell Everyone About Yourself!" }
-            </h2>
+          </h2>
+          {
+            // If authUser id = profile.user_id, option to edit bio
+            // User.id === profileUserId ? <button onClick={toggleEdit}>Edit</button> : null
             <button onClick={toggleEdit}>Edit</button>
+          }
         </div>
       )}
     </div>
