@@ -1,46 +1,46 @@
-import React from "react";
-import { Comment as CommentModel, CommentResponse } from "../models/Comment";
-import "./comment.css";
+import React, { useState } from 'react';
+import { Comment } from '../models/Comment';
+import { likeComment } from '../services/comment';
 
-interface CommentCardProps extends CommentModel {
-  onLike: () => Promise<void>;
+interface CommentCardProps {
+  comment: Comment;
+  likesCount: number;
   avatarUrl: string;
-  commentResponse: CommentResponse;
-  timePosted: string;
+  userId: number;
 }
 
 const CommentCard = ({
+  comment,
+  likesCount,
   avatarUrl,
-  commentResponse,
-  onLike,
-  timePosted,
+  userId
 }: CommentCardProps) => {
+  const [localLikesCount, setLocalLikesCount] = useState(likesCount);
+
+  const handleLike = async () => {
+    try {
+      const updatedCommentResponse = await likeComment(comment.commentId!, userId);
+      if (updatedCommentResponse) {
+        setLocalLikesCount(updatedCommentResponse.likesCount);
+      }
+    } catch (error) {
+      console.error('Error liking comment:', error);
+    }
+  };
+
   return (
-    <div className="card mb-2">
-      <div className="card-body d-flex">
-        <div className="mr-3">
-          <img
-            src={avatarUrl}
-            alt="User Avatar"
-            className="rounded-circle"
-            style={{
-              width: "40px",
-              height: "40px",
-              transform: "translateY(-5px)",
-            }}
-          />
-        </div>
-        <div className="flex-grow-1">
-          <p className="mb-0 text-start" style={{ marginLeft: "20px" }}>
-            {commentResponse.comment.text}
-          </p>
-          <div className="d-flex justify-content-center align-items-center mt-2">
-            <button className="btn btn-outline-primary btn-sm" onClick={onLike}>
-              Like
+    <div className="card mb-3">
+      <div className="card-body d-flex align-items-start">
+        <img src={avatarUrl} alt="Avatar" className="rounded-circle" style={{ width: '50px', height: '50px' }} />
+        <div className="ms-3 w-100">
+          <h6 className="card-title mb-1">User {comment.userId}</h6>
+          <p className="card-text">{comment.text}</p>
+          <div className="d-flex justify-content-between align-items-center">
+            <small className="text-muted">{comment.timePosted}</small>
+            <button className="btn btn-outline-primary btn-sm" onClick={handleLike}>
+              Like ({localLikesCount})
             </button>
-            <span className="ml-2">{commentResponse.likesCount} likes</span>
           </div>
-          <p className="text-end text-muted">{timePosted}</p>
         </div>
       </div>
     </div>
