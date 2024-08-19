@@ -18,7 +18,7 @@ function onLoginPage(){
 
 const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
 
-  axios.post("http://localhost:8080/home/login", values).then((response) => {
+  axios.post("http://192.168.68.78:8080/home/login", values).then((response) => {
     console.log(response.status, response.data);
        //login success
        let userInfo = response.data;
