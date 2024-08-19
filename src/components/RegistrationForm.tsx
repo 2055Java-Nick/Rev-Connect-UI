@@ -27,7 +27,7 @@ const RegistrationForm: React.FC = () => {
   return (
     <Form
       name="registration"
-      labelCol={{ span: 8 }}
+      labelCol={{ span: 10 }}
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
       initialValues={{ remember: true }}
@@ -98,9 +98,9 @@ const RegistrationForm: React.FC = () => {
         name="isBusiness"
         rules={[{ required: true, message: 'Please select your account type!' }]}
       >
-        <Select placeholder = "Please Select">
-          <Option value="user">Personal</Option>
-          <Option value="admin">Business</Option>
+        <Select id="accountType" placeholder = "Please Select">
+          <Option value={false}>Personal</Option>
+          <Option value={true}>Business</Option>
         </Select>
       </Form.Item>
 
