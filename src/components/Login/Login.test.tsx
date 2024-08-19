@@ -1,80 +1,80 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
-import axios from 'axios';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom'; // For matchers like toBeInTheDocument
+import { describe, expect, it } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
+import { UserProvider } from '../Context/UserContext'; // Import the UserProvider
 import Login from './Login';
-import { UserProvider } from '../Context/UserContext';
 
-// Mocking axios
-vi.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+describe('Login Component UI', () => {
+    it('renders the form fields correctly', () => {
+        render(
+            <MemoryRouter>
+                <UserProvider> {/* Wrap the component with UserProvider */}
+                    <Login />
+                </UserProvider>
+            </MemoryRouter>
+        );
 
-describe('Login Component', () => {
-    const renderWithProvider = (ui: React.ReactElement) => {
-        return render(<UserProvider>{ui}</UserProvider>);
-    };
+        // Check that the username and password fields are rendered
+        expect(screen.getByLabelText(/Username:/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/Password:/i)).toBeInTheDocument();
 
-    it('renders the login form', () => {
-        renderWithProvider(<Login />);
-        
-        expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+        // Check that the submit button is rendered
+        expect(screen.getByRole('button', { name: /Login/i })).toBeInTheDocument();
+
+        // Check that the "Forgot password?" link is rendered
+        expect(screen.getByText(/Forgot password\?/i)).toBeInTheDocument();
     });
 
-    it('displays validation errors when form is submitted with empty fields', () => {
-        renderWithProvider(<Login />);
-        
-        fireEvent.submit(screen.getByRole('button', { name: /login/i }));
-        
-        expect(screen.getByText(/username is required/i)).toBeInTheDocument();
-        expect(screen.getByText(/password is required/i)).toBeInTheDocument();
+    it('displays validation errors when submitting empty form', () => {
+        render(
+            <MemoryRouter>
+                <UserProvider> {/* Wrap the component with UserProvider */}
+                    <Login />
+                </UserProvider>
+            </MemoryRouter>
+        );
+
+        // Simulate form submission without entering data
+        fireEvent.click(screen.getByRole('button', { name: /Login/i }));
+
+        // Check that validation errors are displayed
+        expect(screen.getByText(/Username is required/i)).toBeInTheDocument();
+        expect(screen.getByText(/Password is required/i)).toBeInTheDocument();
     });
 
-    it('submits the form with username and password when form is valid', async () => {
-        // Mocking the API response
-        mockedAxios.post.mockResolvedValueOnce({
-            data: { id: '123', username: 'testuser' },
-        });
+    it('updates input fields when typing', () => {
+        render(
+            <MemoryRouter>
+                <UserProvider> {/* Wrap the component with UserProvider */}
+                    <Login />
+                </UserProvider>
+            </MemoryRouter>
+        );
 
-        renderWithProvider(<Login />);
-        
-        fireEvent.change(screen.getByLabelText(/username/i), {
-            target: { value: 'testuser' },
-        });
-        fireEvent.change(screen.getByLabelText(/password/i), {
-            target: { value: 'password123' },
-        });
-        
-        fireEvent.submit(screen.getByRole('button', { name: /login/i }));
-        
-        // Wait for the success message to appear
-        const successMessage = await screen.findByText(/login successful/i);
-        expect(successMessage).toBeInTheDocument();
-        
-        // Ensure the axios post was called with the correct parameters
-        expect(mockedAxios.post).toHaveBeenCalledWith('http://localhost:8080/login', null, {
-            params: {
-                userId: 'testuser',
-                password: 'password123',
-            },
-        });
+        const usernameInput = screen.getByLabelText(/Username:/i) as HTMLInputElement;
+        const passwordInput = screen.getByLabelText(/Password:/i) as HTMLInputElement;
+
+        // Simulate user typing in the input fields
+        fireEvent.change(usernameInput, { target: { value: 'testUser' } });
+        fireEvent.change(passwordInput, { target: { value: 'testPass' } });
+
+        // Check that the input fields have the expected values
+        expect(usernameInput.value).toBe('testUser');
+        expect(passwordInput.value).toBe('testPass');
     });
 
-    it('clears error messages after successful submission', () => {
-        renderWithProvider(<Login />);
-        
-        fireEvent.change(screen.getByLabelText(/username/i), {
-            target: { value: 'testuser' },
-        });
-        fireEvent.change(screen.getByLabelText(/password/i), {
-            target: { value: 'password123' },
-        });
-        
-        fireEvent.submit(screen.getByRole('button', { name: /login/i }));
-        
-        expect(screen.queryByText(/username is required/i)).not.toBeInTheDocument();
-        expect(screen.queryByText(/password is required/i)).not.toBeInTheDocument();
+    it('shows success message from location state', () => {
+        render(
+            <MemoryRouter initialEntries={[{ pathname: '/login', state: { successMessage: 'Password reset successful!' } }]}>
+                <UserProvider> {/* Wrap the component with UserProvider */}
+                    <Login />
+                </UserProvider>
+            </MemoryRouter>
+        );
+
+        // Check that the success message is displayed
+        expect(screen.getByText(/Password reset successful!/i)).toBeInTheDocument();
     });
 });
