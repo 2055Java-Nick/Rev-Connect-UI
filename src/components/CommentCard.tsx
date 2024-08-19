@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Comment } from "../models/Comment";
+import { Comment, CommentResponse } from "../models/Comment";
 import { likeComment } from "../services/comment";
 
 interface CommentCardProps {
@@ -30,7 +30,6 @@ const CommentCard = ({
       console.error("Error liking comment:", error);
     }
   };
-
   return (
     <div className="card mb-3">
       <div className="card-body d-flex align-items-start">
@@ -44,7 +43,9 @@ const CommentCard = ({
           <h6 className="card-title mb-1">User {comment.userId}</h6>
           <p className="card-text">{comment.text}</p>
           <div className="d-flex justify-content-between align-items-center">
-            <small className="text-muted">{comment.timePosted}</small>
+            <small className="text-muted">
+              {comment.timePosted.toString()}
+            </small>
             <button
               className="btn btn-outline-primary btn-sm"
               onClick={handleLike}

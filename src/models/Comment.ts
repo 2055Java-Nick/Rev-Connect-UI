@@ -3,7 +3,7 @@ export interface Comment {
   userId: number;
   postId: number;
   text: string;
-  timePosted: string;
+  timePosted: Date;
 }
 export interface CommentResponse {
   comment: Comment;
