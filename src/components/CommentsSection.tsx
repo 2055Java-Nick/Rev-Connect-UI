@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import CommentCard from './CommentCard';
-import commentAvatar from '../assets/profile-default-icon.png';
-import { getCommentsForPost, createComment } from '../services/comment';
-import { Comment as CommentModel, CommentResponse } from '../models/Comment';
+import React, { useState, useEffect } from "react";
+import CommentCard from "./CommentCard";
+import commentAvatar from "../assets/profile-default-icon.png";
+import { getCommentsForPost, createComment } from "../services/comment";
+import { Comment as CommentModel, CommentResponse } from "../models/Comment";
 
 interface CommentsSectionProps {
   postId: number;
@@ -11,7 +11,7 @@ interface CommentsSectionProps {
 
 const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
   const [comments, setComments] = useState<CommentResponse[]>([]);
-  const [newComment, setNewComment] = useState<string>('');
+  const [newComment, setNewComment] = useState<string>("");
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -19,7 +19,7 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
         const initialComments = await getCommentsForPost(postId, userId);
         setComments(initialComments);
       } catch (error) {
-        console.error('Error fetching comments:', error);
+        console.error("Error fetching comments:", error);
       }
     };
     fetchComments();
@@ -28,13 +28,13 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
     console.log(comments);
   }, [comments]);
   const handleAddComment = async () => {
-    if (newComment.trim() !== '') {
+    if (newComment.trim() !== "") {
       try {
         const newCommentData: CommentModel = {
           userId: userId,
           postId: postId,
           text: newComment,
-          timePosted: new Date().toLocaleString(),
+          timePosted: new Date(),
         };
         const createdComment = await createComment(newCommentData);
         const newCommentResponse: CommentResponse = {
@@ -42,9 +42,9 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
           likesCount: 0,
         };
         setComments([...comments, newCommentResponse]);
-        setNewComment('');
+        setNewComment("");
       } catch (error) {
-        console.error('Error adding comment:', error);
+        console.error("Error adding comment:", error);
       }
     }
   };
@@ -59,7 +59,10 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Add a comment"
         />
-        <button className="btn btn-outline-secondary" onClick={handleAddComment}>
+        <button
+          className="btn btn-outline-secondary"
+          onClick={handleAddComment}
+        >
           Comment
         </button>
       </div>
