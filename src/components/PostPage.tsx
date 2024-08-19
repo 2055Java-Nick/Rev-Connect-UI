@@ -163,8 +163,9 @@ const PostPage: React.FC = () => {
                         {editingPostId === post.postId && (
                             <form onSubmit={handleUpdate} className="update-post-form">
                                 <div>
-                                    <label>New Title:</label>
+                                    <label htmlFor='editTitle'>New Title:</label>
                                     <input
+                                        id="editTitle"
                                         type="text"
                                         value={editTitle}
                                         onChange={(e) => setEditTitle(e.target.value)}
@@ -172,8 +173,9 @@ const PostPage: React.FC = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label>New Content:</label>
+                                    <label htmlFor='editContent'>New Content:</label>
                                     <textarea
+                                        id='editContent'
                                         value={editContent}
                                         onChange={(e) => setEditContent(e.target.value)}
                                         required
