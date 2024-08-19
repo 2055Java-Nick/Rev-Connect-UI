@@ -1,4 +1,10 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
+import Header from './components/Header';
+import SearchBar from './components/SearchBar';
+import PendingRequests from './components/PendingRequests';
+import MyConnections from './components/MyConnections';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   sendConnectionRequest,
   getPendingConnectionRequests,
@@ -8,19 +14,17 @@ import {
   removeConnection,
   searchUser,
 } from './services/api/connections.service';
-import userPic from './assets/user.jpg';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import './styles/App.css';
 import './styles/ToastStyles.css';
+import { toast } from 'react-toastify';
 
 interface User {
   id: number;
   username: string;
   isSameUser: boolean;
   hasPendingRequest: boolean;
-  requestId?: number;
-  connectionId?: number;
+  requestId: number;
+  connectionId: number;
 }
 
 const App: React.FC = () => {
@@ -28,7 +32,7 @@ const App: React.FC = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [pendingRequests, setPendingRequests] = useState<User[]>([]);
   const [myConnections, setMyConnections] = useState<User[]>([]);
-  const userId = 2; // Replace with dynamic user ID logic(accessing it from localStorage after login)
+  const userId = 2;// Replace with dynamic user ID logic(accessing it from localStorage after login)
 
   useEffect(() => {
     fetchPendingRequests();
@@ -144,112 +148,24 @@ const App: React.FC = () => {
   return (
     <div className="dashboard">
       <ToastContainer />
-      <header className="header">
-        <div className="logo">
-          <h1>Connections Dashboard</h1>
-        </div>
-        <nav className="navigation">
-          <a href="/home">Home</a>
-          <a href="/profile">Profile</a>
-          <a href="/messages">Messages</a>
-        </nav>
-      </header>
-
+      <Header />
       <main className="main-content">
-        {/* Search Section */}
-        <section className="search-bar">
-          <input
-            type="text"
-            placeholder="Search users..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="search-input"
-          />
-          <ul className="search-results">
-            {searchResults.map((user) => (
-              <li key={user.id}>
-                <div className="result-details">
-                  <span className="username">{user.username}</span>
-                </div>
-                <div className="actions">
-                  {user.isSameUser ? (
-                    <span className="info-text">This is you</span>
-                  ) : user.hasPendingRequest ? (
-                    <span className="info-text">Request already sent</span>
-                  ) : (
-                    <button
-                      className="send-request-btn"
-                      onClick={() => handleSendConnectionRequest(user.id)}
-                    >
-                      Send Request
-                    </button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="pending-requests">
-          <h2>Pending Connection Requests</h2>
-          <ul>
-            {pendingRequests.map((user) => (
-              <li key={user.requestId}>
-                <div className="request-details">
-                  <img
-                    src={userPic}
-                    alt={user.username}
-                    className="profile-pic"
-                  />
-                  <span className="username">{user.username}</span>
-                </div>
-                <div className="actions">
-                  <button
-                    className="accept-btn"
-                    onClick={() => handleAcceptRequest(user.requestId)}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    className="reject-btn"
-                    onClick={() => handleRejectRequest(user.requestId)}
-                  >
-                    Reject
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="my-connections">
-          <h2>My Connections</h2>
-          <ul>
-            {myConnections.map((user) => (
-              <li key={user.connectionId}>
-                <div className="connection-details">
-                  <img
-                    src={userPic}
-                    alt={user.username}
-                    className="profile-pic"
-                  />
-                  <span className="username">{user.username}</span>
-                </div>
-                <div className="actions">
-                  <button className="message-btn">Message</button>
-                  <button
-                    className="remove-btn"
-                    onClick={() => handleRemoveConnection(user.connectionId)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <SearchBar
+          searchQuery={searchQuery}
+          handleSearchChange={handleSearchChange}
+          searchResults={searchResults}
+          handleSendConnectionRequest={handleSendConnectionRequest}
+        />
+        <PendingRequests
+          pendingRequests={pendingRequests}
+          handleAcceptRequest={handleAcceptRequest}
+          handleRejectRequest={handleRejectRequest}
+        />
+        <MyConnections
+          myConnections={myConnections}
+          handleRemoveConnection={handleRemoveConnection}
+        />
       </main>
-
       <footer className="footer">
         <p>&copy; 2024 Revature. All rights reserved.</p>
         <nav className="footer-nav">
