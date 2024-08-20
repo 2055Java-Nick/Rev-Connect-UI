@@ -35,8 +35,9 @@ const CreatePost: React.FC = () => {
             <h2>Create a New Post</h2>
             <form onSubmit={handleCreate} className="create-post-form">
                 <div>
-                    <label>Title:</label>
+                    <label htmlFor='newTitle'>Title:</label>
                     <input
+                        id='newTitle'
                         type="text"
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
@@ -44,16 +45,18 @@ const CreatePost: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Content:</label>
+                    <label htmlFor='newContent'>Content:</label>
                     <textarea
+                        id='newContent'
                         value={newContent}
                         onChange={(e) => setNewContent(e.target.value)}
                         required
                     />
                 </div>
                 <div>
-                    <label>Media (Image/Video):</label>
+                    <label htmlFor='fileInput'>Media (Image/Video):</label>
                     <input
+                        id='fileInput'
                         type="file"
                         accept="image/*,video/*"
                         onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
