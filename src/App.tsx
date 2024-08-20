@@ -1,23 +1,23 @@
-import './App.css'
-import Home from './components/Home';
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import RegistrationForm from './components/RegistrationForm/RegistrationForm';
+import LandingPage from './pages/LandingPage/LandingPage';
 import Profile from './components/Profile'
-import { Link, BrowserRouter, Route, Router, Routes } from 'react-router-dom'
+import './App.css'; // Import the CSS file
 
-function App() {
+const App: React.FC = () => {
   return (
-      <BrowserRouter>
-        <div>
-          <nav>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/profile">Profile</Link></li>
-          </nav>
-          <Routes>
-            <Route path="/" element={<Home/>}/>
-            <Route path="/profile" element={<Profile/>}/>
-          </Routes>
-        </div>
-      </BrowserRouter>
+    <Router>
+      <div className="app-container">
+        <Routes>
+          <Route path="/landing/:name" element={<LandingPage />} />
+          <Route path="/profile" element={<Profile/>}/>
+          <Route path="/" element={<RegistrationForm />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
-export default App
+export default App;
