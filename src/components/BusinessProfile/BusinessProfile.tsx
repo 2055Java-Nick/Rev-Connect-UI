@@ -3,10 +3,13 @@ import { useParams } from 'react-router-dom';
 import React from 'react'
 import axios from 'axios';
 import { useUser } from '../Context/UserContext';
+import EndorsementLinkForm from '../EndorsementLinkForm';
 
-interface BusinessProfileProps{   
 
-     }
+
+  interface BusinessProfileProps{   
+
+  }
 
 const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
     let { id } = useParams();
@@ -14,12 +17,13 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
     const [bioText, setBioText] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [bioFormData, setBioFormData] = useState<string>('');
+    const [success, setSuccess] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [business, setBusiness] = useState<boolean>(false);
-    const [profileUserId, setProfileUserId] = useState<string>('');
+    const [profileUserId, setProfileUserId] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const { user, setUser } = useUser();
  
@@ -31,14 +35,15 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
     useEffect(() => {
         axios.get(path_url)
             .then((response) => {
-                setBioText(response.data.BIO_TEXT)
-                setBioFormData(response.data.BIO_TEXT)
-                setUsername(response.data.USERNAME)
-                setFirstName(response.data.FIRSTNAME)
-                setLastName(response.data.LASTNAME)
-                setEmail(response.data.EMAIL)
-                setBusiness(response.data.IS_BUSINESS)
-                setProfileUserId(response.data.USER_ID)
+                console.log(response);
+                setBioText(response.data.BIO_TEXT);
+                setBioFormData(response.data.BIO_TEXT);
+                setUsername(response.data.USERNAME);
+                setFirstName(response.data.FIRSTNAME);
+                setLastName(response.data.LASTNAME);
+                setEmail(response.data.EMAIL);
+                setBusiness(response.data.IS_BUSINESS);
+                setProfileUserId(response.data.USER_ID);
                 setError(null);
             })
             .catch((error) => {
@@ -70,7 +75,7 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
         });
         
         console.log("Bio updated");
-        alert("Bio Updated!");
+        setSuccess("Bio Updated!");
         setIsEditing(false);
     };
 
@@ -90,7 +95,7 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
               <p className="text-center">{ email }</p>
             </div>
           {
-              business ? <h2>&lt; Links /&gt; Component (to be added)</h2> : null
+               //business ? ***ADD LINKS COMPONENT*** : null
           }
   
           { isEditing ? (
@@ -116,8 +121,10 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
               </p>
             </div>
               {
-                // user  && user.id == profileUserId ? <button onClick={toggleEdit}>Edit</button> : null
-                <button onClick={toggleEdit} className='my-2'>Edit</button>
+                 (user && profileUserId) && user.id == profileUserId.toString() ? <button onClick={toggleEdit} className='my-2'>Edit</button> : null
+              }
+              {
+                success ? <p className="py-2">{success}</p> : null
               }
             </div>
         )}
