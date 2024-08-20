@@ -5,7 +5,7 @@ import { getCommentsForPost, createComment } from "../services/comment";
 import { Comment as CommentModel, CommentResponse } from "../models/Comment";
 
 interface CommentsSectionProps {
-  postId: number;
+  postId: bigint;
   userId: number;
 }
 

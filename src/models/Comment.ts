@@ -1,7 +1,7 @@
 export interface Comment {
   commentId?: number;
   userId: number;
-  postId: number;
+  postId: bigint;
   text: string;
   timePosted: Date;
 }
