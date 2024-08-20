@@ -2,6 +2,19 @@ import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080/api/post';
 
+// base for making api calls
+// API class object
+
+
+// const apiContext = axios.create({
+//   baseURL: "http://localhost:8080",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
+
+// export default apiContext;
+
 export const createPost = async (formData: FormData) => {
     const response = await axios.post(API_BASE_URL, formData, {
         headers: {
