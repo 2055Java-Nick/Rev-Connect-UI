@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Comment } from "../models/Comment";
 import { likeComment } from "../services/comment";
+import "./comment.css";
 
 interface CommentCardProps {
   comment: Comment; // The comment object containing details of the comment
@@ -40,19 +41,23 @@ const CommentCard = ({
   return (
     <div className="card mb-3">
       {/* Card body containing the comment details */}
-      <div className="card-body d-flex align-items-start">
+      <div className="card-body d-flex align-items-center">
         {/* Avatar image */}
         <img
           src={avatarUrl}
           alt="Avatar"
           className="rounded-circle"
-          style={{ width: "50px", height: "50px" }}
+          style={{
+            width: "50px",
+            height: "50px",
+            transform: "translateY(-5px)",
+          }}
         />
-        <div className="ms-3 w-100">
+        <div className="ms-3 w-100 d-flex flex-column overflow-auto">
           {/* User information and comment text */}
-          <h6 className="card-title mb-1">User {comment.userId}</h6>
-          <p className="card-text">{comment.text}</p>
-          <div className="d-flex justify-content-between align-items-center">
+          <h6 className="card-title mb-2 text-start">User {comment.userId}</h6>
+          <p className="mb-2 card-text text-start ">{comment.text}</p>
+          <div className="d-flex justify-content-between align-items-center mt-auto">
             {/* Display the time the comment was posted */}
             <small className="text-muted">
               {comment.timePosted.toString()}
