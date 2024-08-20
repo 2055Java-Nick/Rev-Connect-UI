@@ -5,8 +5,8 @@ import { BaseService } from "../services/BaseService";
 export default function useFetch<T>(
   service: BaseService<T>,
   postId?: number,
-): FetchResult<T | T[]> {
-  const [data, setData] = useState<T | T[] | null>(null);
+): FetchResult<T> {
+  const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -14,12 +14,10 @@ export default function useFetch<T>(
     const fetchData = async () => {
       try {
         setLoading(true);
-        let result;
-        if (postId !== undefined) {
-          result = await service.get(postId);
-        } else {
-          result = await service.getAll();
+        if (postId == undefined) {
+          throw new Error("postId cannot be undefined");
         }
+        const result = await service.get(postId);
         setData(result);
       } catch (error) {
         setError(error as Error);

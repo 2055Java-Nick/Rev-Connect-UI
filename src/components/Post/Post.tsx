@@ -6,10 +6,10 @@ import { PostModel } from "../../models/post";
 
 export default function Post() {
   const { id } = useParams();
-  const postId = id ? parseInt(id, 10) : 0;
-
+  const postId = id ? parseInt(id, 10) : undefined;
   const { data, error, loading } = useFetch<PostModel>(postService, postId);
   if (loading) return <>This component is loading ... </>;
+  // TODO: install actual error boundaries
   if (error) return <ErrorBoundary />;
   if (!data) return <>No DATA!</>;
 
@@ -17,12 +17,12 @@ export default function Post() {
     <div className="flex">
       <div className="text-start">
         <label className="form-label" htmlFor="post-input">
-          Post title goes here
+          {data.postText}
         </label>
         <textarea
           id="post-input"
           className="form-control"
-          placeholder="This is a Post"
+          placeholder={data.postText}
         />
       </div>
     </div>
