@@ -1,14 +1,14 @@
 function Home() {
     const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        localStorage.setItem('tempUserId', e.target.value);
+        localStorage.setItem('userId', e.target.value);
     }
 
     return (
         <>
             <div>Home</div>
             <div>
-                <label htmlFor="tempUserId">Temp User Id</label>
-                <input type='text' id='tempUserId' name='tempUserId' onChange={onFormChange}></input>
+                <label htmlFor="userId">Temp User Id</label>
+                <input type='text' id='userId' name='userId' onChange={onFormChange}></input>
             </div>
         </>
     )

@@ -20,6 +20,10 @@ interface PersonalProfile {
     bio: string
 }
 
+interface Header {
+    Authorization: string
+}
+
 function Profile() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [formValues, setFormValues] = useState<ProfileForm>({ id: '', firstName: '', lastName: '', bio: '' })
@@ -30,10 +34,14 @@ function Profile() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                console.log("Getting user from: " + serviceLocation + "/profile/" + localStorage.getItem('tempUserId'))
-                const response : AxiosResponse<PersonalProfile> = await axios.get(serviceLocation + "/profile/" + localStorage.getItem('tempUserId'))
+                console.log("Getting user from: " + serviceLocation + "/profile/" + localStorage.getItem('userId'))
+                const response : AxiosResponse<PersonalProfile> = await axios.get(serviceLocation + "/profile/" + localStorage.getItem('userId'), {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("sessionToken")
+                    }
+                })
                 setFormValues({
-                    id: localStorage.getItem('tempUserId') ?? "",
+                    id: localStorage.getItem('userId') ?? "",
                     firstName: response.data.user.firstName,
                     lastName: response.data.user.lastName,
                     bio: response.data.bio
@@ -74,10 +82,13 @@ function Profile() {
         axios.put(serviceLocation + "/profile", 
             {
                 user: {
-                    id: formValues.id,
                     firstName: formValues.firstName,
                     lastName: formValues.lastName },
                 bio: formValues.bio
+            },{
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("sessionToken")
+                }
             }
         ).then((response: { status: any; data: any; }) => {
             console.log(response.status, response.data);
