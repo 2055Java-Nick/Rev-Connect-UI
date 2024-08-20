@@ -1,6 +1,5 @@
 /* Ensure the body and html take full height and use Flexbox to center the form */
 
-
   /* Container for the registration form */
   .registration-form-container {
     background: white; /* White background */
@@ -11,26 +10,22 @@
     width: 100%;
     text-align: center; /* Center-align text inside the form */
   }
-
   /* Form logo */
   .form-logo {
     width: 100px; /* Adjust the size as needed */
     margin-bottom: 20px;
   }
-
   /* Form title */
   .registration-form-title {
     font-size: 24px;
     margin-bottom: 20px;
     color: #333; /* Darker text color */
   }
-
   /* Form fields */
   .registration-form-field {
     margin-bottom: 15px;
     text-align: left; /* Left-align labels and inputs */
   }
-
   /* Form labels */
   .registration-form-field label {
     display: block;
@@ -38,7 +33,6 @@
     font-weight: bold;
     color: #333; /* Darker text color */
   }
-
   /* Form inputs */
   .registration-form-field input {
     width: 100%;
@@ -47,7 +41,6 @@
     border-radius: 4px; /* Slightly rounded corners */
     box-sizing: border-box;
   }
-
   /* Form buttons */
   .registration-form-button {
     width: 100%;
@@ -60,7 +53,6 @@
     font-size: 16px;
     margin-top: 20px; /* Space above the button */
   }
-
   .registration-form-button:hover {
     background-color: #005a9e; /* Darker blue on hover */
   }
