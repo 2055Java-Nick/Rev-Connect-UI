@@ -1,0 +1,121 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f8fa;
+    margin: 0;
+    padding: 20px;
+}
+
+
+.post-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.post-box {
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.post-details {
+    flex-grow: 1;
+}
+
+.post-title {
+    font-weight: bold;
+    margin: 0;
+    font-size: 16px;
+}
+
+.post-time {
+    font-size: 12px;
+    color: #657786;
+}
+
+
+.post-content {
+    font-size: 14px;
+    color: #14171a;
+    margin-top: 8px;
+    white-space: pre-wrap; /* Preserve formatting like newlines */
+}
+
+
+.post-updated {
+    font-size: 12px;
+    color: #657786;
+    margin-top: 8px;
+}
+
+
+form {
+    margin-bottom: 20px;
+}
+
+form div {
+    margin-bottom: 12px;
+}
+
+input[type="text"], input[type="number"], textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccd6dd;
+    box-sizing: border-box;
+}
+
+textarea {
+    height: 60px;
+    resize: none;
+}
+
+.btn {
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0d95e8;
+}
+
+.post-media {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
