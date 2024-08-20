@@ -1,6 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom"; // **Import for extended matchers**
-import { render, fireEvent, screen } from "@testing-library/react"; // **Testing library helpers**
+import { render, fireEvent, screen, waitFor } from "@testing-library/react"; // **Testing library helpers**
 import { beforeEach, describe, expect, it, vi } from "vitest"; // **Testing utilities**
 
 import CommentCard from "../components/CommentCard"; // **Import the component to test**
@@ -82,5 +82,52 @@ describe("CommentCard", () => {
     // Verify that the correct likes count is displayed
     const likesCountElement = screen.getByText("Like (5)");
     expect(likesCountElement).toBeInTheDocument();
+  });
+
+  it("toggles like and unlike correctly", async () => {
+    // Initial like count is 3
+    const initialLikesCount = 3;
+    const likeResponse = { likesCount: initialLikesCount + 1 };
+    const unlikeResponse = { likesCount: initialLikesCount };
+
+    // Mock the likeComment function
+    (likeComment as unknown as ReturnType<typeof vi.fn>)
+      .mockResolvedValueOnce(likeResponse) // First click should increment likes
+      .mockResolvedValueOnce(unlikeResponse); // Second click should decrement likes
+
+    render(
+      <CommentCard
+        comment={mockComment}
+        likesCount={initialLikesCount}
+        avatarUrl="avatar.png"
+        userId={1}
+      />
+    );
+
+    // Verify initial like count
+    expect(screen.getByText(`Like (${initialLikesCount})`)).toBeInTheDocument();
+
+    // Simulate clicking the like button to increase likes
+    const likeButton = screen.getByText(`Like (${initialLikesCount})`);
+    fireEvent.click(likeButton);
+
+    // Verify that likeComment was called and the like count updated
+    await waitFor(() => {
+      expect(likeComment).toHaveBeenCalledWith(mockComment.commentId, 1);
+      expect(
+        screen.getByText(`Like (${initialLikesCount + 1})`)
+      ).toBeInTheDocument();
+    });
+
+    // Simulate clicking the like button again to decrease likes (unlike)
+    fireEvent.click(likeButton);
+
+    // Verify that likeComment was called again and the like count reverted
+    await waitFor(() => {
+      expect(likeComment).toHaveBeenCalledWith(mockComment.commentId, 1);
+      expect(
+        screen.getByText(`Like (${initialLikesCount})`)
+      ).toBeInTheDocument();
+    });
   });
 });
