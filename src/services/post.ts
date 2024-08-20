@@ -1,7 +1,7 @@
-import { Post } from "../models/post";
+import { PostModel } from "../models/post";
 import { BaseService } from "./BaseService";
 
-class PostService extends BaseService<Post> {
+class PostService extends BaseService<PostModel> {
   constructor() {
     super("/posts");
   }

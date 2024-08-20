@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../pages/Home/Home";
 import App from "../App";
+import ViewPosts from "../pages/Posts";
 
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   //TODO: figure out how we are storing token/logincreds/etc.
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         Component: HomePage,
+      },
+      {
+        path: "/posts/:id",
+        Component: ViewPosts,
       },
     ],
   },

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Post } from "../../models/post";
-import { postService } from "../../services/post";
+import { PostModel } from "../../models/post";
+import { postService } from "../../services/Post";
 
 const Form = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostModel[]>([]);
   const getAllPosts = async () => {
     const response = await postService.getAll();
 
