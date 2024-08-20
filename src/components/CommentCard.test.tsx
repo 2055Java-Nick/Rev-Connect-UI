@@ -1,14 +1,17 @@
 import React from "react";
-import "@testing-library/jest-dom";
-import { render, fireEvent, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import CommentCard from "../components/CommentCard";
-import { Comment } from "../models/Comment";
-import avatar from "../assets/profile-default-icon.png";
-import { likeComment } from "../services/comment";
+import "@testing-library/jest-dom"; // **Import for extended matchers**
+import { render, fireEvent, screen } from "@testing-library/react"; // **Testing library helpers**
+import { beforeEach, describe, expect, it, vi } from "vitest"; // **Testing utilities**
 
-// Mock the `likeComment` service
-vi.mock("../services/comment");
+import CommentCard from "../components/CommentCard"; // **Import the component to test**
+import { Comment } from "../models/Comment"; // **Import the Comment model type**
+import avatar from "../assets/profile-default-icon.png"; // **Import the default avatar image**
+import { likeComment } from "../services/comment"; // **Import the likeComment service (mocked later)**
+
+// Mock the `likeComment` service to control its behavior in tests
+vi.mock("../services/comment", () => ({
+  likeComment: vi.fn(),
+}));
 
 describe("CommentCard", () => {
   const mockComment: Comment = {
@@ -27,7 +30,7 @@ describe("CommentCard", () => {
   };
 
   beforeEach(() => {
-    // Reset mocks before each test
+    // Reset mocks before each test to ensure clean state
     vi.clearAllMocks();
   });
 
@@ -51,7 +54,10 @@ describe("CommentCard", () => {
   });
 
   it("calls the likeComment function and updates the like count when the Like button is clicked", async () => {
-    (likeComment as vi.Mock).mockResolvedValue({ likesCount: 6 });
+    // Mock the likeComment service to return a new likes count
+    (likeComment as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
+      likesCount: 6,
+    });
 
     render(<CommentCard {...mockProps} />);
 
@@ -59,13 +65,13 @@ describe("CommentCard", () => {
     const likeButton = screen.getByText("Like (5)");
     fireEvent.click(likeButton);
 
-    // Verify that the likeComment service was called
+    // Verify that the likeComment service was called with the correct arguments
     expect(likeComment).toHaveBeenCalledWith(
       mockComment.commentId,
       mockProps.userId
     );
 
-    // Wait for the likes count to update
+    // Wait for the likes count to update asynchronously
     await screen.findByText("Like (6)");
     expect(screen.getByText("Like (6)")).toBeInTheDocument();
   });
