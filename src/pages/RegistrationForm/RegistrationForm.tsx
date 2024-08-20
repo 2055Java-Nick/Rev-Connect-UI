@@ -2,15 +2,11 @@ import React from 'react';
 import { Form, Input, Button, Select, Checkbox } from 'antd';
 import { Store } from 'antd/lib/form/interface'; // Import the correct type for form values
 import { useNavigate } from 'react-router-dom';
-<<<<<<<< HEAD:src/components/RegistrationForm/RegistrationForm.tsx
 import '../../styles/pages/RegistrationForm.css'; // Correct the import path
 import logo from '../../assets/Revconnect.png'; // Import the image
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface'; // Import the correct type for error info
-========
-import { onFinish, onFinishFailed } from '../../formHandlers';
-import '../../styles/pages/RegistrationForm.css'; // Correct the import path
-import logo from '../../assets/Revconnect.png'; // Import the image
->>>>>>>> 9f8b293 (#3 -  added CSS to registration form, and restructured styles and pages):src/pages/RegistrationForm/RegistrationForm.tsx
+
+
 
 const { Option } = Select;
 
