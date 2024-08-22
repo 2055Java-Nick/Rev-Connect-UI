@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom'; // Provides additional matchers for testing DOM elements
-import CreatePost from '../components/CreatePost'; // Import the component to be tested
+import CreatePost from './CreatePost'; // Import the component to be tested
 import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter for routing
 import { describe, expect, vi, beforeEach, afterEach, test } from 'vitest'; // Import Vitest utilities
-import { createPost, getPostById } from '../services/api'; // Mocked API services
+import { createPost, getPostById } from '../../services/api'; // Mocked API services
 import { useNavigate } from 'react-router-dom'; // Mocked navigation function
 
 // Mock the API functions
-vi.mock('../services/api', () => ({
+vi.mock('../../services/api', () => ({
     createPost: vi.fn(), // Mock createPost API call
     getPostById: vi.fn(), // Mock getPostById API call
 }));
@@ -28,7 +28,7 @@ describe('CreatePost Component', () => {
 
     // Before each test, ensure that the useNavigate mock returns the mockNavigate function
     beforeEach(() => {
-        (useNavigate as unknown as ReturnType<typeof vi.fn>).mockReturnValue(mockNavigate);
+        (useNavigate as ReturnType<typeof vi.fn>).mockReturnValue(mockNavigate);
     });
 
     // After each test, clear all mock data
@@ -82,8 +82,9 @@ describe('CreatePost Component', () => {
     test('submits form and handles navigation correctly', async () => {
         // Mock the API response for creating a new post
         const mockNewPost = { postId: 1 };
-        (createPost as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(mockNewPost);
-        (getPostById as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(mockNewPost);
+        (createPost as ReturnType<typeof vi.fn>).mockResolvedValue(mockNewPost);
+        (getPostById as ReturnType<typeof vi.fn>).mockResolvedValue(mockNewPost);
+
 
         // Render the CreatePost component wrapped in BrowserRouter
         render(
@@ -109,7 +110,8 @@ describe('CreatePost Component', () => {
 
     test('handles API errors during submission', async () => {
         // Mock the API to throw an error when trying to create a post
-        (createPost as unknown as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('API Error'));
+        (createPost as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('API Error'));
+
 
         // Render the CreatePost component wrapped in BrowserRouter
         render(

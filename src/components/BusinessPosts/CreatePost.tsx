@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createPost, getPostById } from '../services/api';
+import { createPost, getPostById } from '../../services/api';
 
 const CreatePost: React.FC = () => {
     const [newTitle, setNewTitle] = useState('');
@@ -24,7 +24,11 @@ const CreatePost: React.FC = () => {
             setNewTitle('');
             setNewContent('');
             setFile(null);
-            navigate('/posts'); // after creating post, navigate to posts page
+             // Adding a small delay before navigation to render the images
+             setTimeout(() => {
+                navigate('/posts');
+            }, 500); 
+            
         } catch (error) {
             console.error('Error creating post:', error);
         }

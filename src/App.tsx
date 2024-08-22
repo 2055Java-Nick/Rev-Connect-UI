@@ -1,7 +1,7 @@
 import './App.css'
-import Post from './components/PostPage'
+import Post from './components/BusinessPosts/PostPage'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CreatePost from './components/CreatePost';
+import CreatePost from './components/BusinessPosts/CreatePost';
 
 
 function App() {
