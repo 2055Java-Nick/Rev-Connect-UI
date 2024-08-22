@@ -52,7 +52,7 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
             });
     }, []);
 
-    const path_url = `http://localhost:8080/profiles/business/${id}`;
+    const path_url = `http://localhost:8080/profile/business/${id}`;
 
     const toggleEdit = () => {
         setIsEditing(!isEditing);

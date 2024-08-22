@@ -25,7 +25,7 @@ function App() {
           <Route path="/reset-password/*" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/login" />} />
   
-        <Route path="/profiles/business/:id" element={ <BusinessProfile /> } />
+        <Route path="/profile/business/:id" element={ <BusinessProfile /> } />
       </Routes>
         </BrowserRouter>
       </UserProvider>
