@@ -48,24 +48,28 @@ const EndorsementLinkForm: React.FC<EndorsementLinkFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className='d-flex flex-column justify-content-center align-items-center text-center border rounded px-5 py-3 m-3'>
-      <label className='d-flex flex-column justify-content-center align-items-center text-center'>
+    <form onSubmit={handleSubmit} className='d-flex flex-column justify-content-center align-items-center text-center'>
+      <label htmlFor="links">
         Link
+      </label>
         <input
           type="text"
+          name="link"
           value={link}
           onChange={(event) => setLink(event.target.value)}
         />
-      </label>
-      <label className='d-flex flex-column justify-content-center align-items-center text-center'>
+      
+      <br/>
+      <label htmlFor='linkText'>
         Link Text
+      </label>
         <input
           type="text"
+          name='linkText'
           value={linkText}
           onChange={(event) => setLinkText(event.target.value)}
         />
-      </label>
-      <button type="submit">Save</button>
+      <button type="submit" className='my-1'>Save</button>
     </form>
   );
 };
