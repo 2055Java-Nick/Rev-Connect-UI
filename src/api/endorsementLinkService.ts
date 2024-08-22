@@ -11,7 +11,7 @@ interface EndorsementLink {
   linkText: string;
 }
 
-const BASE_URL = '/api/endorsement_links';
+const BASE_URL = 'http://localhost:8080/api/endorsement_links';
 
 /**
  * Creates an endorsement link.

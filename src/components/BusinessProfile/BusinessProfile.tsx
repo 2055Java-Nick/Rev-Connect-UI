@@ -1,12 +1,27 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {
+  createEndorsementLinkService,
+  deleteEndorsementLinkService,
+  getEndorsementLinksService,
+  updateEndorsementLinkService,
+} from "../../api/endorsementLinkService";
+import { useEffect, useState } from 'react';
+
+import EndorsementLinkForm from './EndorsementLinkForm';
 import React from 'react'
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { useUser } from '../Context/UserContext';
 
 interface BusinessProfileProps{   
 
      }
+
+interface EndorsementLink {
+  id?: number;
+  userId: number;
+  link: string;
+  linkText: string;
+}
 
 const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
     let { id } = useParams();
@@ -21,11 +36,24 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
     const [business, setBusiness] = useState<boolean>(false);
     const [profileUserId, setProfileUserId] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
+    const [endorsementLinks, setEndorsementLinks] = useState<EndorsementLink[]>([]);
     const { user, setUser } = useUser();
- 
+
     useEffect(() => {
         // console.log('User context:', user);
     }, [user]);
+
+    useEffect(() => {
+      if (business) {
+        getEndorsementLinksService(Number(profileUserId))
+          .then((data) => {
+            setEndorsementLinks(data);
+          })
+          .catch((error) => {
+            console.error('Error fetching endorsement links:', error);
+          });
+      }
+    }, [business, profileUserId]); 
 
 
     useEffect(() => {
@@ -74,6 +102,31 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
         setIsEditing(false);
     };
 
+    const handleAddOrUpdateLink = async (endorsementLink: EndorsementLink) => {
+      try {
+        let updatedLink: EndorsementLink[];
+        if (endorsementLink.id) {
+          updatedLink = await updateEndorsementLinkService(endorsementLink);
+          setEndorsementLinks((endorsementLinks) => ((endorsementLink.id === updatedLink?.id)) ? updatedLink : endorsementLinks);
+        } else {
+          updatedLink = await createEndorsementLinkService(endorsementLink);
+          setEndorsementLinks((endorsementLinks) => [...endorsementLinks, updatedLink]);
+        }
+        
+      } catch (error) {
+        console.error(`Error adding or updating link: ${error}`);
+      }
+    }
+
+    const handleDeleteLink = async (id: number) => {
+      try {
+        await deleteEndorsementLinkService(id);
+        setEndorsementLinks((endorsementLinks) => endorsementLinks.filter((link) => link.id !== id));
+      } catch (error) {
+        console.error(`Error deleting link: ${error}`);
+      }
+    }
+
   return (
     <div>
         <img src="/src/assets/Revconnect.png" alt='RevConnect Logo' className='w-25 mx-3 my-3'/>
@@ -89,9 +142,25 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
               <p className="text-center">{ `${ firstName } ${ lastName }` }</p>
               <p className="text-center">{ email }</p>
             </div>
-          {
-              business ? <h2>&lt; Links /&gt; Component (to be added)</h2> : null
-          }
+            {
+                business ? (
+                    <div>
+                        <h2>Manage Your Endorsement Links</h2>
+                        <EndorsementLinkForm userId={Number(profileUserId)} onSubmit={handleAddOrUpdateLink} />
+                        <ul>
+                            {endorsementLinks.map((link) => (
+                                <li key={link.id}>
+                                    <a href={link.link} target="_blank" rel="noopener noreferrer">
+                                        {link.linkText}
+                                    </a>
+                                    <button onClick={() => handleDeleteLink(link.id!)}>Delete</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ) : null
+            }
+
   
           { isEditing ? (
           <form onSubmit={ handleSubmit } className="text-center">

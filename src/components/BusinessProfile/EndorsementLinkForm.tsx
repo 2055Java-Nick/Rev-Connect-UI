@@ -57,6 +57,7 @@ const EndorsementLinkForm: React.FC<EndorsementLinkFormProps> = ({
           onChange={(event) => setLink(event.target.value)}
         />
       </label>
+      <br/>
       <label>
         Link Text
         <input
