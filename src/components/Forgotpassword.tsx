@@ -15,7 +15,7 @@ const ForgotPassword: React.FC = () => {
     } catch (error) {
       notification.error({
         message: 'Error',
-        description: 'Email not found or an error occurred. Please try again.',
+        description: 'Email not found. Please try again.',
       });
     }
   };

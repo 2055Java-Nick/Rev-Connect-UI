@@ -13,7 +13,7 @@ const ResetPassword: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!token) {
-      message.error('Invalid or missing reset token.');
+      message.error('Invalid reset token.');
       return;
     }
 
@@ -23,7 +23,7 @@ const ResetPassword: React.FC = () => {
       });
       message.success('Password has been reset successfully');
     } catch (error) {
-      message.error('Invalid token or there was an issue resetting your password.');
+      message.error('Invalid token or issue resetting your password.');
     }
   };
 
