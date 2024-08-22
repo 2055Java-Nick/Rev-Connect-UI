@@ -11,6 +11,7 @@ interface Media {
 interface PostProps {
     post: {
         postId: bigint;
+        userId: bigint;
         title: string;
         content: string;
         createdAt: string;

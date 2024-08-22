@@ -18,6 +18,7 @@ interface Media {
 
 interface Post {
     postId: bigint;
+    userId: bigint;
     title: string;
     content: string;
     createdAt: string;

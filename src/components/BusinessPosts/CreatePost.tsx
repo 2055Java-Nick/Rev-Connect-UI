@@ -15,6 +15,7 @@ const CreatePost: React.FC = () => {
             const formData = new FormData();
             formData.append('title', newTitle);
             formData.append('content', newContent);
+            formData.append('userId', '1');
             if (file) {
                 formData.append('file', file);
             }
