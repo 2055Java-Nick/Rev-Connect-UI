@@ -23,7 +23,10 @@ interface Post {
     createdAt: string;
     updatedAt?: string;
 }
-
+interface PostResponse {
+    post: Post;
+    likesCount: number;
+}
 const PostPage: React.FC = () => {
     const [postIdToEdit, setPostIdToEdit] = useState<bigint | null>(null);
     const [editTitle, setEditTitle] = useState('');
@@ -41,7 +44,7 @@ const PostPage: React.FC = () => {
             const paginatedPosts = await getPostsByPage(page);
             setPosts(paginatedPosts);
 
-            const mediaPromises = paginatedPosts.map(async (post) => {
+            const mediaPromises = paginatedPosts.map(async (post: Post) => {
                 const postMedia = await getMediaByPostId(post.postId);
                 return { postId: post.postId, media: postMedia };
             });
