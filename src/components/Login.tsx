@@ -3,6 +3,7 @@ import axios from 'axios';
 import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input } from 'antd';
 import logo from '../assets/Revconnect.png';
+import { Link } from 'react-router-dom';
 
 type FieldType = {
   username?: string;
@@ -18,18 +19,18 @@ function onLoginPage(){
 
 const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
 
-  axios.post("http://192.168.68.78:8080/home/login", values).then((response) => {
+  axios.post("http://192.168.1.72:8080/home/login", values).then((response) => {
     console.log(response.status, response.data);
        //login success
        let userInfo = response.data;
-       console.log("userInfo.username",userInfo.username)
+       //console.log("userInfo.username",userInfo.username)
        // get return by Json file for user info
-       localStorage.setItem("userInfo",JSON.stringify(userInfo));
+       localStorage.setItem("token",userInfo.token);
        // give a alert to User
        alert("login success,welcome "+ userInfo.username)
        
        // transfer tab to Revature
-       window.location.href="https://revature.com/"
+       //window.location.href="https://revature.com/"
   }).catch(e => {
       //login faild 
       alert("Incorrect username or password, Please try again!")  
@@ -95,7 +96,10 @@ const App: React.FC = () => (
         Submit
       </Button>
     </Form.Item>
-  </Form>
+    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Link to="/forgot-password">Forgot Password?</Link> {/* Forgot Password Link */}
+      </Form.Item>
+    </Form>
   </div>
 );
 
