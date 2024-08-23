@@ -1,20 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
-import LandingPage from './pages/LandingPage/LandingPage';
+import LandingPage from './components/LandingPage/LandingPage';
 import './App.css'; // Import the CSS file
 
+// Define the App component
 const App: React.FC = () => {
-  return (
-    <Router>
-      <div className="app-container">
-        <Routes>
-          <Route path="/landing/:name" element={<LandingPage />} />
-          <Route path="/" element={<RegistrationForm />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+  // Define the routes using useRoutes hook
+  const routes = useRoutes([
+    { path: '/', element: <RegistrationForm /> },
+    { path: '/landing/:name', element: <LandingPage /> },
+  ]);
+
+  return routes; // Return the routes to be rendered
 };
 
-export default App;
+export default App; // Export the App component as default
