@@ -2,12 +2,11 @@ import { LoginData } from "../types/user";
 import apiClient from "./api";
 import { handleApiResponse } from "./responseHandler";
 
-const BASE_URL = "/auth";
 interface LoginResponse {
   token: string;
 }
 export async function loginUser(data: LoginData) {
-  const response = await apiClient.post(`${BASE_URL}/login`, data);
+  const response = await apiClient.post("/auth/login", data);
   return handleApiResponse<LoginResponse>(response);
 }
 

@@ -8,11 +8,11 @@ export default defineConfig({
     proxy: {
       "/api": {
         // TODO: remove reference to localhost
-        target: process.env.API_URL || "http://localhost8080",
+        target: process.env.VITE_API_URL || "http://localhost8080",
         changeOrigin: true,
         secure: false,
         rewrite(path) {
-          return path.replace(/^\/api/, "");
+          return path.replace(/^\/api/, "/api");
         },
       },
     },
