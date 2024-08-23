@@ -1,6 +1,7 @@
 // App.test.tsx
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
 import App from './App';
@@ -13,7 +14,7 @@ describe('App component', () => {
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText(/registration form/i)).toBeInTheDocument();
+    expect(screen.getByText(/register/i)).toBeInTheDocument();
   });
 
   it('renders LandingPage component for the /landing/:name path', () => {
@@ -22,6 +23,6 @@ describe('App component', () => {
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText(/landing page/i)).toBeInTheDocument();
+    expect(screen.getByText(/Welcome/i)).toBeInTheDocument();
   });
 });

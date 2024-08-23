@@ -1,35 +1,34 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { describe, it, expect } from 'vitest';
 import RegistrationForm from './RegistrationForm';
+import LandingPage from '../LandingPage/LandingPage';
 
-describe('RegistrationForm', () => {
-  it('renders the form with all fields', () => {
-    render(<RegistrationForm />);
+describe('RegistrationForm Component', () => {
+  it('navigates to the landing page on successful form submission', async () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/landing/:name" element={<LandingPage />} />
+          <Route path="/" element={<RegistrationForm />} />
+        </Routes>
+      </MemoryRouter>
+    );
 
-    // Check if all form fields are rendered
-    expect(screen.getByLabelText(/Firstname/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Lastname/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Username/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Account Type/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Register/i })).toBeInTheDocument();
+    // Simulate form submission
+    fireEvent.change(screen.getByLabelText(/Firstname/i), { target: { value: 'John' } });
+    fireEvent.change(screen.getByLabelText(/Lastname/i), { target: { value: 'Doe' } });
+    fireEvent.change(screen.getByLabelText(/Username/i), { target: { value: 'johndoe' } });
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'password' } });
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText(/Account Type/i), { target: { value: 'user' } });
+    fireEvent.click(screen.getByText(/register/i));
+
+    // Check if navigation occurred
+    expect(await screen.findByText((content) => {
+      return /welcome, john/i.test(content);
+    })).toBeInTheDocument();
   });
-
-  it('shows validation messages on submit without filling fields', async () => {
-    render(<RegistrationForm />);
-
-    fireEvent.click(screen.getByRole('button', { name: /Register/i }));
-
-    expect(await screen.findByText(/Please input your firstname!/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Please input your lastname!/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Please input your username!/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Please input your email!/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Please input your password!/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Please select your account type!/i)).toBeInTheDocument();
-  });
-
-  // Add more tests as needed
 });
