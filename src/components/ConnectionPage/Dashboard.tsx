@@ -13,15 +13,23 @@ import {
   rejectConnectionRequest,
   removeConnection,
   searchUser,
-} from '../services/api/connections.service';
+} from '../../services/api';
 import '../styles/Dashboard.css';
-import { User } from '../types/user';
+import { User } from '../../types/user';
 
 const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<User[]>([]);
-  const [pendingRequests, setPendingRequests] = useState<User[]>([]);
-  const [myConnections, setMyConnections] = useState<User[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<Array<{
+    requestId: number;
+    id: number;
+    username: string;
+  }>>([]);
+  const [myConnections, setMyConnections] = useState<Array<{
+    connectionId: number;
+    id: number;
+    username: string;
+  }>>([]);
   const userId = 2; // Replace with dynamic user ID logic (e.g., localStorage)
 
   useEffect(() => {
@@ -50,7 +58,7 @@ const Dashboard: React.FC = () => {
     try {
       const data = await getPendingConnectionRequests(userId);
       const mappedRequests = data.map((req: any) => ({
-        requestId: req.connectionId,
+        requestId: req.connectionId, // Ensure this matches what the PendingRequests component expects
         id: req.requester.accountId,
         username: req.requester.username,
       }));
@@ -65,14 +73,12 @@ const Dashboard: React.FC = () => {
       const data = await findConnectionsByUserId(userId);
       const mappedConnections = data.map((conn: any) => ({
         connectionId: conn.connectionId,
-        id:
-          conn.recipient.accountId !== userId
-            ? conn.recipient.accountId
-            : conn.requester.accountId,
-        username:
-          conn.recipient.accountId !== userId
-            ? conn.recipient.username
-            : conn.requester.username,
+        id: conn.recipient.accountId !== userId
+          ? conn.recipient.accountId
+          : conn.requester.accountId,
+        username: conn.recipient.accountId !== userId
+          ? conn.recipient.username
+          : conn.requester.username,
       }));
       setMyConnections(mappedConnections);
     } catch (error) {

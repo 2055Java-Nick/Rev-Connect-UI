@@ -61,4 +61,105 @@ apiClient.interceptors.response.use(
   },
 );
 
+//connection api
+
+// Send Connection Request:
+const connection = 'connection'
+
+export const sendConnectionRequest = async (requesterId: number, recipientId: number) => {
+  try {
+      const response = await axios.post(`/${connection}/send`, null, {
+          params: {
+              requesterId,
+              recipientId
+          }
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error sending connection request:', error);
+      throw error;
+  }
+};
+
+// Accept Connection Request:
+export const acceptConnectionRequest = async (requestId: number) => {
+  try {
+      const response = await axios.post(`/${connection}/accept/${requestId}`);
+      return response.data;
+  } catch (error) {
+      console.error('Error accepting connection request:', error);
+      throw error;
+  }
+};
+
+// Reject Connection Request:
+export const rejectConnectionRequest = async (requestId: number) => {
+  try {
+      const response = await axios.post(`/${connection}/reject/${requestId}`);
+      return response.data;
+  } catch (error) {
+      console.error('Error rejecting connection request:', error);
+      throw error;
+  }
+};
+
+// Remove Connection:
+export const removeConnection = async (connectionId: number) => {
+  try {
+    const response = await axios.delete(`/${connection}/remove/${connectionId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error removing connection:', error);
+    throw error;
+  }
+};
+
+
+// List Pending Connection Requests:
+export const getPendingConnectionRequests = async (userId: number) => {
+  try {
+      const response = await axios.get(`/${connection}/pending/${userId}`);
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching pending connection requests:', error);
+      throw error;
+  }
+};
+
+// List All Connections:
+export const getAllConnections = async () => {
+  try {
+      const response = await axios.get(`/${connection}/all`);
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching all connections:', error);
+      throw error;
+  }
+};
+
+// List Connections By User ID:
+export const findConnectionsByUserId = async (userId: number) => {
+  try {
+      const response = await axios.get(`/${connection}/connections/${userId}`);
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching connections for user:', error);
+      throw error;
+  }
+}
+
+  // List users by query:
+  export const searchUser = async (query: string, currentUserId: number) => {
+      try {
+        const response = await axios.get(`/${connection}/search/${query}`, {
+          params: { currentUserId },
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        throw error;
+      }
+    };
+
+
 export default apiClient;

@@ -1,6 +1,6 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import * as api from '../../services/api/connections.service';
+import * as api from '../../services/api';
 import Dashboard from './Dashboard';
 
 describe('Dashboard Component', () => {

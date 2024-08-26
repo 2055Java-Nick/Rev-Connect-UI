@@ -1,6 +1,7 @@
 import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import SearchBar, { SearchBarProps } from '../components/ConnectionPage/SearchBar';
+import SearchBar, { SearchBarProps } from './SearchBar';
+
 
 describe('SearchBar Component', () => {
   const mockHandleSearchChange = vi.fn();

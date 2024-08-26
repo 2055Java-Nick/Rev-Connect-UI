@@ -1,0 +1,15 @@
+.custom-toast {
+    background-color: #354a5f;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  .custom-toast .Toastify__close-button {
+    color: white;
+  }
+  
+  .custom-toast .Toastify__progress-bar {
+    background-color: #e0a800;
+  }
