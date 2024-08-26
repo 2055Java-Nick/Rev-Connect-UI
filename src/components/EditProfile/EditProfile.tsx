@@ -1,52 +1,47 @@
 import React from 'react';
-import { Form, Input, Button, Select, Checkbox } from 'antd';
+import { Form, Input, Button, Select } from 'antd'; // Import necessary components from Ant Design
 import { Store } from 'antd/lib/form/interface'; // Import the correct type for form values
-import { useNavigate } from 'react-router-dom';
-import '../../styles/pages/RegistrationForm.css'; // Correct the import path
-import logo from '../../assets/Revconnect.png'; // Import the image
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook for navigation
+import '../../styles/pages/EditProfile.css'; // Import the CSS file for styling
+import logo from '../../assets/Revconnect.png'; // Import the logo image
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface'; // Import the correct type for error info
 import { FormData } from '../../types/user';
 
-const { Option } = Select;
+const { Option } = Select; // Destructure Option from Select for easier usage
 
 
+const EditForm: React.FC = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
 
-// clean user information
-onLoginPage();
-function onLoginPage(){
-  localStorage.removeItem("userInfo");
-}
-
-const RegistrationForm: React.FC = () => {
-  const navigate = useNavigate();
-
+  // Function to handle form submission success
   const handleFinish = (values: Store) => {
-    console.log('Success:', values);
-    // Handle form submission
-    navigate(`/edit-profile/`); // Navigate to the landing page
+    console.log('Success:', values); // Log the form values
+    // Handle form submission for editing
+    navigate(`/landing/${values.firstname}`); // Navigate to the profile page with the username as a parameter
   };
   
+  // Function to handle form submission failure
   const handleFinishFailed = (errorInfo: ValidateErrorEntity) => {
-    console.log('Failed:', errorInfo);
+    console.log('Failed:', errorInfo); // Log the error information
   };
 
   return (
-    <div className="registration-form-container">
-      <img src={logo} alt="Logo" className="form-logo" /> {/* Add the image */}
+    <div className="edit-form-container"> {/* Container for the edit form */}
+      <img src={logo} alt="Logo" className="form-logo" /> {/* Display the logo image */}
       <Form
-        name="registration"
+        name="edit"
         onFinish={handleFinish}
         onFinishFailed={handleFinishFailed}
         initialValues={{
-          accounttype: 'user'
+          accounttype: 'user' // Set default value for account type
         }}
-        className="registration-form"
+        className="edit-form" // CSS class for styling the form
       >
         <Form.Item<FormData>
           label="Firstname"
           name="firstname"
           rules={[{ required: true, message: 'Please input your firstname!' }]}
-          className="registration-form-field"
+          className="edit-form-field"
         >
           <Input />
         </Form.Item>
@@ -55,25 +50,25 @@ const RegistrationForm: React.FC = () => {
           label="Lastname"
           name="lastname"
           rules={[{ required: true, message: 'Please input your lastname!' }]}
-          className="registration-form-field"
+          className="edit-form-field"
         >
           <Input />
         </Form.Item>
 
-        <Form.Item<FormData>
+        {/* <Form.Item<FormData>
           label="Username"
           name="username"
           rules={[{ required: true, message: 'Please input your username!' }]}
-          className="registration-form-field"
+          className="edit-form-field"
         >
           <Input />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item<FormData>
           label="Password"
           name="password"
           rules={[{ required: true, message: 'Please input your password!' }]}
-          className="registration-form-field"
+          className="edit-form-field"
         >
           <Input.Password />
         </Form.Item>
@@ -82,7 +77,7 @@ const RegistrationForm: React.FC = () => {
           label="Email"
           name="email"
           rules={[{ required: true, message: 'Please input your email!', type: 'email' }]}
-          className="registration-form-field"
+          className="edit-form-field"
         >
           <Input />
         </Form.Item>
@@ -91,7 +86,7 @@ const RegistrationForm: React.FC = () => {
           label="Account Type"
           name="accounttype"
           rules={[{ required: true, message: 'Please select your account type!' }]}
-          className="registration-form-field"
+          className="edit-form-field"
         >
           <Select placeholder="Please Select">
             <Option value="user">Personal</Option>
@@ -99,18 +94,9 @@ const RegistrationForm: React.FC = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item<FormData>
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 0, span: 24 }}
-          className="registration-form-field"
-        >
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ offset: 0, span: 24 }} className="registration-form-field">
-          <Button type="primary" htmlType="submit" className="registration-form-button">
-            Register
+        <Form.Item wrapperCol={{ offset: 0, span: 24 }} className="edit-form-field">
+          <Button type="primary" htmlType="submit" className="edit-form-button">
+            Save Changes
           </Button>
         </Form.Item>
       </Form>
@@ -118,4 +104,4 @@ const RegistrationForm: React.FC = () => {
   );
 };
 
-export default RegistrationForm;
+export default EditForm; // Export the EditForm component as default

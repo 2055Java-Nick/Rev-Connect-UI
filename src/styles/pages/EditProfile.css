@@ -1,0 +1,32 @@
+/* Container for the edit form */
+.edit-form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Logo styling */
+  .form-logo {
+    display: block;
+    margin: 0 auto 20px;
+    width: 150px;
+  }
+  
+  /* Form styling */
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Form field styling */
+  .edit-form-field {
+    margin-bottom: 16px;
+  }
+  
+  /* Button styling */
+  .edit-form-button {
+    width: 100%;
+  }

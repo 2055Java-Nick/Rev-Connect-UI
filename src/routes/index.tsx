@@ -3,6 +3,7 @@ import RegistrationForm from "../components/RegistrationForm/RegistrationForm";
 import LoginPage from "../components/LoginPage/LoginPage";
 import Layout from "../pages/Layout";
 import ProtectedRoute from "../components/ProtectedRoute";
+import EditProfile from "../components/EditProfile/EditProfile"; // Import the EditForm component
 
 export const router = createBrowserRouter([
   {
@@ -22,5 +23,9 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegistrationForm />,
+  },
+  {
+    path: "/edit-profile", // Add route for EditForm
+    element: <EditProfile />,
   },
 ]);
