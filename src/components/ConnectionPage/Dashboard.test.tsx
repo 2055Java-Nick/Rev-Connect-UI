@@ -1,7 +1,7 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import Dashboard from '../components/Dashboard';
 import * as api from '../../services/api/connections.service';
+import Dashboard from './Dashboard';
 
 describe('Dashboard Component', () => {
   it('renders header and footer', () => {
