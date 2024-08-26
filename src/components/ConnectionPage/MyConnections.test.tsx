@@ -1,6 +1,6 @@
 import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import MyConnections, { MyConnectionsProps } from '../components/MyConnections';
+import MyConnections, { MyConnectionsProps } from '../components/ConnectionPage/MyConnections';
 
 describe('MyConnections Component', () => {
   const mockHandleRemoveConnection = vi.fn();
