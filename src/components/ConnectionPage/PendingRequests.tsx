@@ -1,5 +1,5 @@
 import React from 'react';
-import userPic from '../assets/user.jpg'
+import userPic from '../../assets/user.jpg'
 
 export interface PendingRequestsProps {
   pendingRequests: Array<{

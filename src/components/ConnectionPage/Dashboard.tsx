@@ -14,12 +14,12 @@ import {
   removeConnection,
   searchUser,
 } from '../../services/api';
-import '../styles/Dashboard.css';
-import { User } from '../../types/user';
+import '../../styles/pages/ConnectionPage.css';
+import { UserConnectionData } from '../../types/user';
 
 const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [searchResults, setSearchResults] = useState<UserConnectionData[]>([]);
   const [pendingRequests, setPendingRequests] = useState<Array<{
     requestId: number;
     id: number;

@@ -3,9 +3,11 @@ export interface LoginData {
   password: string;
 }
 
-export interface User {
+export interface UserConnectionData {
   id: number;
   username: string;
   isSameUser: boolean;
   hasPendingRequest: boolean;
+  requestId: number;
+  connectionId: number;
 }
