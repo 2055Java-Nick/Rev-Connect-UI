@@ -1,9 +1,10 @@
 import { render, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import PendingRequests, { PendingRequestsProps } from '../components/PendingRequests';
 
 describe('PendingRequests Component', () => {
-  const mockHandleAcceptRequest = jest.fn();
-  const mockHandleRejectRequest = jest.fn();
+  const mockHandleAcceptRequest = vi.fn();
+  const mockHandleRejectRequest = vi.fn();
 
   const defaultProps: PendingRequestsProps = {
     pendingRequests: [
@@ -14,19 +15,19 @@ describe('PendingRequests Component', () => {
     handleRejectRequest: mockHandleRejectRequest,
   };
 
-  test('renders pending requests', () => {
+  it('renders pending requests', () => {
     const { getByText } = render(<PendingRequests {...defaultProps} />);
     expect(getByText('JohnDoe')).toBeInTheDocument();
     expect(getByText('JaneDoe')).toBeInTheDocument();
   });
 
-  test('calls handleAcceptRequest when clicking accept', () => {
+  it('calls handleAcceptRequest when clicking accept', () => {
     const { getAllByText } = render(<PendingRequests {...defaultProps} />);
     fireEvent.click(getAllByText('Accept')[0]);
     expect(mockHandleAcceptRequest).toHaveBeenCalledWith(1);
   });
 
-  test('calls handleRejectRequest when clicking reject', () => {
+  it('calls handleRejectRequest when clicking reject', () => {
     const { getAllByText } = render(<PendingRequests {...defaultProps} />);
     fireEvent.click(getAllByText('Reject')[0]);
     expect(mockHandleRejectRequest).toHaveBeenCalledWith(1);

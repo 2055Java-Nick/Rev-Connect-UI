@@ -1,8 +1,9 @@
 import { render, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import MyConnections, { MyConnectionsProps } from '../components/MyConnections';
 
 describe('MyConnections Component', () => {
-  const mockHandleRemoveConnection = jest.fn();
+  const mockHandleRemoveConnection = vi.fn();
 
   const defaultProps: MyConnectionsProps = {
     myConnections: [
@@ -12,13 +13,13 @@ describe('MyConnections Component', () => {
     handleRemoveConnection: mockHandleRemoveConnection,
   };
 
-  test('renders connections', () => {
+  it('renders connections', () => {
     const { getByText } = render(<MyConnections {...defaultProps} />);
     expect(getByText('JohnDoe')).toBeInTheDocument();
     expect(getByText('JaneDoe')).toBeInTheDocument();
   });
 
-  test('calls handleRemoveConnection when clicking remove', () => {
+  it('calls handleRemoveConnection when clicking remove', () => {
     const { getAllByText } = render(<MyConnections {...defaultProps} />);
     fireEvent.click(getAllByText('Remove')[0]);
     expect(mockHandleRemoveConnection).toHaveBeenCalledWith(1);
