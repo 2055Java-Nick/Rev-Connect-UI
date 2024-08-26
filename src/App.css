@@ -1,4 +1,4 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -62,8 +62,8 @@ body {
   background-image: url('/background.jpg');
   background-size: cover;
   background-position: center;
-  height: 100vh; /* Full viewport height */
+  height: 100vh; /* Full viewport height 
   display: flex;
   justify-content: center;
   align-items: center;
-}
+}*/
