@@ -1,24 +1,12 @@
-//import { useState } from 'react'
-import revConnectLogo from './assets/Revconnect.png'
-import './App.css'
-import RegistrationForm from './components/RegistrationForm';
+import { RouterProvider } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { router } from "./routes";
 
-function App() {
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://revature.com/" target="_blank">
-          <img src={revConnectLogo} className="logo" alt="Revature logo" />
-        </a>
-      </div>
-      <h2>Registration Page</h2>
-      <div>
-
-      <RegistrationForm />
-    </div>
-    </>
-  )
+    <AuthProvider>
+      <RouterProvider router={router} fallbackElement={<p>Loading</p>} />
+    </AuthProvider>
+  );
 }
 
-export default App
