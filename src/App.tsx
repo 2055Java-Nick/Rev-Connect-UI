@@ -1,20 +1,12 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import RegistrationForm from './components/RegistrationForm/RegistrationForm';
-import LandingPage from './pages/LandingPage/LandingPage';
-import './App.css'; // Import the CSS file
+import { RouterProvider } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { router } from "./routes";
 
-const App: React.FC = () => {
+export default function App() {
   return (
-    <Router>
-      <div className="app-container">
-        <Routes>
-          <Route path="/landing/:name" element={<LandingPage />} />
-          <Route path="/" element={<RegistrationForm />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <RouterProvider router={router} fallbackElement={<p>Loading</p>} />
+    </AuthProvider>
   );
-};
+}
 
-export default App;
