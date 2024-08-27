@@ -20,6 +20,7 @@ interface PostProps {
     media: Media[];
     onEdit: (postId: bigint, title: string, content: string) => void;
     onDelete: (postId: bigint) => void;
+    onPin:(postId: bigint,isPinned: String) => void;
     isEditing: boolean;
     editTitle: string;
     editContent: string;
@@ -33,6 +34,7 @@ const Post: React.FC<PostProps> = ({
     media,
     onEdit,
     onDelete,
+    onPin,
     isEditing,
     editTitle,
     editContent,
@@ -81,6 +83,16 @@ const Post: React.FC<PostProps> = ({
                     >
                         🗑️
                     </button>
+
+                    <button
+                        onClick={() => onPin(post.postId,"false")}
+                        className="pin-icon"
+                        title="Pin Post"
+                    >
+                        🗑️
+                        
+                    </button>
+
                 </div>
             </div>
             <p className="post-content">{post.content}</p>

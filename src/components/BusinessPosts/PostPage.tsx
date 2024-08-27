@@ -3,7 +3,8 @@ import {
     updatePostById,
     deletePostById,
     getPostsByPage,
-    getMediaByPostId
+    getMediaByPostId,
+    updatePostPin
 } from '../../services/api';
 import Post from './Post'; 
 import '../../styles/components/PostPage.modules.css'
@@ -94,6 +95,18 @@ const PostPage: React.FC = () => {
         }
     };
 
+    const handlePinPost = async (postId: bigint, isPinned: String) => {
+        const formData = new FormData();
+        formData.append('isPinned', isPinned.trim());
+        await updatePostPin(postId,formData).then((response)=>{
+            console.log(response);
+        }).catch((e)=>{
+            console.log(e);
+        })
+
+        // console.log("postId: "+postId+"  pinned vakue: "+isPinned);
+    }
+
     const handleEdit = (postId: bigint, title: string, content: string) => {
         setPostIdToEdit(postId);
         setEditTitle(title);
@@ -111,6 +124,7 @@ const PostPage: React.FC = () => {
                         media={media[post.postId.toString()] || []} 
                         onEdit={handleEdit} 
                         onDelete={handleDelete} 
+                        onPin={handlePinPost}
                         isEditing={postIdToEdit === post.postId}
                         editTitle={editTitle}
                         editContent={editContent}

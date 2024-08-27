@@ -35,3 +35,8 @@ export const getMediaByPostId = async (postId: bigint) => {
     const response = await axios.get(`${API_BASE_URL}/media/${postId}`);
     return response.data;
 };
+
+export const updatePostPin = async (id: bigint,formData: FormData) => {
+    const response = await axios.post(`${API_BASE_URL}/pin/${id}`,formData);
+    return response.data;
+};
