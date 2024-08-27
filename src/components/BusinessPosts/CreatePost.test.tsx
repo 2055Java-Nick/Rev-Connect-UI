@@ -8,7 +8,7 @@ import { createPost, getPostById } from '../../services/postApi'; // Mocked API 
 import { useNavigate } from 'react-router-dom'; // Mocked navigation function
 
 // Mock the API functions
-vi.mock('../../services/api', () => ({
+vi.mock('../../services/postApi', () => ({
     createPost: vi.fn(), // Mock createPost API call
     getPostById: vi.fn(), // Mock getPostById API call
 }));
