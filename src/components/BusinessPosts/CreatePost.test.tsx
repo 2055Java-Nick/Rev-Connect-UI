@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'; // Provides additional matchers for testing 
 import CreatePost from './CreatePost'; // Import the component to be tested
 import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter for routing
 import { describe, expect, vi, beforeEach, afterEach, test } from 'vitest'; // Import Vitest utilities
-import { createPost, getPostById } from '../../services/api'; // Mocked API services
+import { createPost, getPostById } from '../../services/postApi'; // Mocked API services
 import { useNavigate } from 'react-router-dom'; // Mocked navigation function
 
 // Mock the API functions

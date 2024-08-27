@@ -4,7 +4,7 @@ import {
     deletePostById,
     getPostsByPage,
     getMediaByPostId
-} from '../../services/api';
+} from '../../services/postApi';
 import Post from './Post'; 
 import '../../styles/components/PostPage.modules.css'
 

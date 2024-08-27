@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PostPage from './PostPage';
 import { describe, expect, vi, beforeEach, afterEach, test } from 'vitest';
-import { deletePostById, getMediaByPostId, getPostsByPage, updatePostById } from '../../services/api';
+import { deletePostById, getMediaByPostId, getPostsByPage, updatePostById } from '../../services/postApi';
 
 vi.mock('../../services/api', () => ({
     getPostsByPage: vi.fn(),
