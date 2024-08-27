@@ -20,8 +20,6 @@ interface Post {
     postId: bigint;
     title: string;
     content: string;
-    createdAt: string;
-    updatedAt?: string;
 }
 interface PostResponse {
     post: Post;
