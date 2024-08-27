@@ -3,6 +3,8 @@ import RegistrationForm from "../components/RegistrationForm/RegistrationForm";
 import LoginPage from "../components/LoginPage/LoginPage";
 import Layout from "../pages/Layout";
 import ProtectedRoute from "../components/ProtectedRoute";
+import CreatePost from "../components/BusinessPosts/CreatePost";
+import PostPage from "../components/BusinessPosts/PostPage";
 
 export const router = createBrowserRouter([
   {
@@ -22,5 +24,12 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegistrationForm />,
+  },
+  {path: '/create-post',
+    element: <CreatePost />,
+  },
+  {
+    path: '/posts',
+    element: <PostPage />,
   },
 ]);
