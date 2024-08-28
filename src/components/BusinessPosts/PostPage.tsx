@@ -115,7 +115,7 @@ const PostPage: React.FC = () => {
 
   const handlePinPost = async (postId: bigint, isPinned: boolean) => {
     const formData = new FormData();
-    formData.append("isPinned", (!isPinned).toString());
+    formData.append("isPinned", !isPinned ? "true" : "false");
     await updatePostPin(postId, formData)
       .then((response) => {
         setPosts(
@@ -125,11 +125,7 @@ const PostPage: React.FC = () => {
               : post
           )
         );
-        // const pinnedPosts = posts.filter((post) => post.isPinned);
-        // const unPinnedPosts = posts.filter((post) => !post.isPinned);
-        //   const combined = [...pinnedPosts, ...unPinnedPosts];
-        //   setPosts(combined);
-        // console.log(response);
+        console.log(response);
       })
       .then(() => {
         fetchPosts(currentPage);
@@ -137,8 +133,6 @@ const PostPage: React.FC = () => {
       .catch((e) => {
         console.log(e);
       });
-
-    // console.log("postId: "+postId+"  pinned vakue: "+isPinned);
   };
 
   const handleEdit = (postId: bigint, title: string, content: string) => {
