@@ -1,7 +1,7 @@
 import { IconButton } from "@mui/material";
 import React from "react";
-import PushPinIcon from '@mui/icons-material/PushPin';
-import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import PushPinIcon from "@mui/icons-material/PushPin";
+import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 
 interface Media {
   mediaId: bigint;
@@ -105,22 +105,12 @@ const Post: React.FC<PostProps> = ({
             🗑️
           </button>
 
-          {/* <button
-            onClick={() => onPin(post.postId, post.isPinned ? "false" : "true")} // Change isPinned based on current state
-            className="pin-icon"
-            title={post.isPinned ? "Unpin Post" : "Pin Post"} // Change title based on state
-          >
-            {post.isPinned ? "📍Unpin" : " 📌 Pin"}
-          </button> */}
-          
           <IconButton
             onClick={() => onPin(post.postId, post.isPinned ? "false" : "true")}
-            title={post.isPinned ? "Unpin Post" : "Pin Post"} // Change title based on state 
+            title={post.isPinned ? "Unpin Post" : "Pin Post"} // Change title based on state
           >
             {post.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
- 
           </IconButton>
-          
         </div>
       </div>
       <p className="post-content">{post.content}</p>
