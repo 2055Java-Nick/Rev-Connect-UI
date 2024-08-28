@@ -8,10 +8,13 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test" : "vitest",
+    "test": "vitest",
     "test:ui": "vitest --ui"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.0.0",
     "axios": "^1.7.4",
     "cors": "^2.8.5",
     "react": "^18.3.1",

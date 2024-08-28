@@ -24,7 +24,7 @@ interface Post {
   content: string;
   createdAt: string;
   updatedAt?: string;
-  pinned: boolean;
+  isPinned: boolean;
 }
 
 const PostPage: React.FC = () => {
@@ -32,6 +32,7 @@ const PostPage: React.FC = () => {
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
+  const [tempPosts, setTempPosts] = useState<Post[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [media, setMedia] = useState<{ [key: string]: Media[] }>({});
 
@@ -42,7 +43,10 @@ const PostPage: React.FC = () => {
   const fetchPosts = async (page: number) => {
     try {
       const paginatedPosts = await getPostsByPage(page);
-      setPosts(paginatedPosts);
+      const pinnedPosts = paginatedPosts.filter((post) => post.isPinned);
+      const unPinnedPosts = paginatedPosts.filter((post) => !post.isPinned);
+      const combined = [...pinnedPosts, ...unPinnedPosts];
+      setPosts(combined);
 
       const mediaPromises = paginatedPosts.map(async (post) => {
         const postMedia = await getMediaByPostId(post.postId);
@@ -110,10 +114,16 @@ const PostPage: React.FC = () => {
       .then((response) => {
         setPosts(
           posts.map((post) =>
-            post.postId === postId ? { ...post, pinned: !post.pinned } : post
+            post.postId === postId ? { ...post, isPinned: !post.isPinned } : post
           )
         );
-        console.log(response);
+        // const pinnedPosts = posts.filter((post) => post.isPinned);
+        // const unPinnedPosts = posts.filter((post) => !post.isPinned);
+        //   const combined = [...pinnedPosts, ...unPinnedPosts];
+        //   setPosts(combined);
+        // console.log(response);
+      }).then(()=>{
+        fetchPosts(currentPage);
       })
       .catch((e) => {
         console.log(e);
@@ -139,7 +149,7 @@ const PostPage: React.FC = () => {
             media={media[post.postId.toString()] || []}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            onPin={() => handlePinPost(post.postId, post.pinned)}
+            onPin={() => handlePinPost(post.postId, post.isPinned)}
             isEditing={postIdToEdit === post.postId}
             editTitle={editTitle}
             editContent={editContent}
