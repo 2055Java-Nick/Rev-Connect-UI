@@ -43,15 +43,21 @@ const PostPage: React.FC = () => {
   const fetchPosts = async (page: number) => {
     try {
       const paginatedPosts = await getPostsByPage(page);
-      const pinnedPosts = paginatedPosts.filter((post) => post.isPinned);
-      const unPinnedPosts = paginatedPosts.filter((post) => !post.isPinned);
+      const pinnedPosts = paginatedPosts.filter(
+        (post: { isPinned: any }) => post.isPinned
+      );
+      const unPinnedPosts = paginatedPosts.filter(
+        (post: { isPinned: any }) => !post.isPinned
+      );
       const combined = [...pinnedPosts, ...unPinnedPosts];
       setPosts(combined);
 
-      const mediaPromises = paginatedPosts.map(async (post) => {
-        const postMedia = await getMediaByPostId(post.postId);
-        return { postId: post.postId, media: postMedia };
-      });
+      const mediaPromises = paginatedPosts.map(
+        async (post: { postId: bigint }) => {
+          const postMedia = await getMediaByPostId(post.postId);
+          return { postId: post.postId, media: postMedia };
+        }
+      );
 
       const mediaResults = await Promise.all(mediaPromises);
       // Reduce the array of media results into an object (mediaMap) where each key is a postId (as a string),
@@ -114,7 +120,9 @@ const PostPage: React.FC = () => {
       .then((response) => {
         setPosts(
           posts.map((post) =>
-            post.postId === postId ? { ...post, isPinned: !post.isPinned } : post
+            post.postId === postId
+              ? { ...post, isPinned: !post.isPinned }
+              : post
           )
         );
         // const pinnedPosts = posts.filter((post) => post.isPinned);
@@ -122,7 +130,8 @@ const PostPage: React.FC = () => {
         //   const combined = [...pinnedPosts, ...unPinnedPosts];
         //   setPosts(combined);
         // console.log(response);
-      }).then(()=>{
+      })
+      .then(() => {
         fetchPosts(currentPage);
       })
       .catch((e) => {
