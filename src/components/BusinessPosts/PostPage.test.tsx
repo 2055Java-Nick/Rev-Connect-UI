@@ -8,9 +8,9 @@ import {
   getMediaByPostId,
   getPostsByPage,
   updatePostById,
-} from "../../services/api";
+} from "../../services/postApi";
 
-vi.mock("../../services/api", () => ({
+vi.mock("../../services/postApi", () => ({
   getPostsByPage: vi.fn(),
   updatePostById: vi.fn(),
   deletePostById: vi.fn(),

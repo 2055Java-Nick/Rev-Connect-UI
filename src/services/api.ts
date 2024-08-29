@@ -1,42 +1,64 @@
-import axios from 'axios';
+import axios from "axios";
+import log from "loglevel";
 
-const API_BASE_URL = 'http://localhost:8080/api/post';
+import { ApiError } from "./errors";
 
-export const createPost = async (formData: FormData) => {
-    const response = await axios.post(API_BASE_URL, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
-    return response.data;
-};
+const BASE_URL = import.meta.env.VITE_API_URL;
 
-export const getPostById = async (id: bigint) => {
-    const response = await axios.get(`${API_BASE_URL}/${id}`);
-    return response.data;
-};
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export const updatePostById = async (id: bigint, title: string, content:string ) => {
-    const response = await axios.patch(`${API_BASE_URL}/${id}`, { title, content });
-    return response.data;
-};
+// Inteceptors
+// attach token to requests
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (
+      token &&
+      !config.url?.includes("/login") &&
+      !config.url?.includes("/register")
+    ) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-export const deletePostById = async (id: bigint) => {
-    const response = await axios.delete(`${API_BASE_URL}/${id}`);
-    return response.data;
-};
+// global error handling if needed
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.reponse) {
+      const apiError = new ApiError(
+        error.response.data?.message || "Ooops, an error occured",
+        error.response.status,
+        error.response.data?.details
+      );
+      return Promise.reject(apiError);
+    }
+    return Promise.reject(error);
+  }
+);
 
-export const getPostsByPage = async (page: number) => {
-    const response = await axios.get(`${API_BASE_URL}?page=${page}`);
-    return response.data;
-};
+// logging if needed
+log.setLevel("INFO"); // set logging level to info
 
-export const getMediaByPostId = async (postId: bigint) => {
-    const response = await axios.get(`${API_BASE_URL}/media/${postId}`);
-    return response.data;
-};
+apiClient.interceptors.response.use(
+  (response) => {
+    log.info("API Response: ", response);
+    return response;
+  },
+  (error) => {
+    log.error("API Error: ", error);
+    return Promise.reject(error);
+  }
+);
 
-export const updatePostPin = async (id: bigint,formData: FormData) => {
-    const response = await axios.post(`${API_BASE_URL}/pin/${id}`,formData);
-    return response.data;
-};
+export default apiClient;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPost, getPostById } from "../../services/api";
+import { createPost, getPostById } from "../../services/postApi";
 
 const CreatePost: React.FC = () => {
   const [newTitle, setNewTitle] = useState("");
