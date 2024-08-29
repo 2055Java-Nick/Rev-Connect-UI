@@ -1,5 +1,5 @@
 
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useState } from 'react';
  
 const ForgotPassword = () => {
@@ -30,7 +30,8 @@ const ForgotPassword = () => {
       });
       console.log(response)
       setMessage(response.data.message || 'Password reset link sent to your email.');
-    } catch (error) {
+    } catch (err: unknown) {
+      const error = err as AxiosError;
       if (error.response && error.response.data) {
         setMessage('Invalid email!');
       } else {
