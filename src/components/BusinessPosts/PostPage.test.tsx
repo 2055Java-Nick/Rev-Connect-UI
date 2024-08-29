@@ -54,10 +54,10 @@ describe('PostPage Component', () => {
         // Wait for posts to load
         await waitFor(() => {
             const post1 = screen.getByText((content, element) => 
-                element?.tagName.toLowerCase() === 'h4' && content.includes('Test Post 1')
+                content.includes("Test Post 1") && element?.tagName.toLowerCase() === "h5"
             );
             const post2 = screen.getByText((content, element) => 
-                element?.tagName.toLowerCase() === 'h4' && content.includes('Test Post 2')
+                content.includes("Test Post 2") && element?.tagName.toLowerCase() === "h5"
             );
 
             expect(post1).toBeInTheDocument();
@@ -68,9 +68,7 @@ describe('PostPage Component', () => {
     test('handles pagination', async () => {
         render(<PostPage />);
 
-        await waitFor(() => expect(screen.getByText((content, element) => 
-            element?.tagName.toLowerCase() === 'h4' && content.includes('Test Post 1')
-        )).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Test Post 1')).toBeInTheDocument());
 
         // Click next page button
         fireEvent.click(screen.getByRole('button', { name: /Next/i }));

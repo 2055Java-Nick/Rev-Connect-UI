@@ -30,11 +30,16 @@ const Post: React.FC<PostProps> = ({
     
 
     return (
-        <li className="card mb-3">
+        <div className="card mb-3">
             <div className="card-body">
                 <div className="d-flex justify-content-between align-items-center mb-2">
                     <div className="d-flex align-items-center">
-                        <img src="path-to-profile-image.jpg" alt="User Profile" className="rounded-circle me-3" style={{ width: '50px', height: '50px' }} />
+                        <img
+                            src="path-to-profile-image.jpg"
+                            alt="User Profile"
+                            className="rounded-circle me-3"
+                            style={{ width: '50px', height: '50px' }}
+                        />
                         <div>
                             <h5 className="card-title mb-0">{post.title}</h5>
                             <small className="text-muted">{new Date(post.createdAt).toLocaleString()}</small>
@@ -90,7 +95,7 @@ const Post: React.FC<PostProps> = ({
                     </form>
                 </div>
             )}
-        </li>
+        </div>
     );
 };
 
