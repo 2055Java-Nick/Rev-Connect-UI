@@ -230,7 +230,10 @@ import { useParams } from 'react-router-dom';
 import { useUser } from '../Context/UserContext';
 import EndorsementLinksManager from "./EndorsementLink";
 import BioSection from "./BioSection";
-import { Cloudinary } from "cloudinary-core";
+import { Grid, Box, Typography, Button, FormControl, FormLabel  } from '@mui/material';
+import ThemeSelector from './ThemeSelector';
+import { useTheme } from './ThemeManager';
+
 
 interface BusinessProfileProps {}
 
@@ -243,7 +246,7 @@ interface EndorsementLink {
 
 const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
   let { id } = useParams();
-
+  const { themeName, setThemeName } = useTheme();
   const [bioText, setBioText] = useState<string>('Default Bio Text'); // Hardcoded bio text
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [bioFormData, setBioFormData] = useState<string>('Default Bio Text'); // Hardcoded bio text
@@ -262,7 +265,7 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
   const [bannerUrl, setBannerUrl] = useState<string>('/path/to/default/banner.jpg');
   const [profilePicURL, setProfilePicURL] = useState<string>(''); 
   const { user, setUser } = useUser();
-  const cloudinary = new Cloudinary({ cloud_name: 'your-cloud-name' });
+
   useEffect(() => {
       //console.log('User context:', user);
   }, [user]);
@@ -312,6 +315,7 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
       }
     }
   };
+  
   // Handle profile picture upload
   const handleProfilePicUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -362,55 +366,94 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
   }
 
   return (
-    <div>
-        {/* <img src="/src/assets/Revconnect.png" alt='RevConnect Logo' className='w-25 mx-3 my-3'/> */}
-        {business && (<img src={bannerUrl || '/src/assets/Revconnect.png'} alt='Banner' className='w-100 mx-3 my-3' />)}
-       
-        <img src={profilePicURL || '/path/to/default/profile/pic.jpg'} alt='Profile' className='w-25 rounded-circle mx-3 my-3' />
-        <button onClick={toggleEdit} className="btn btn-primary my-2">
-          {isEditing ? "Cancel" : "Edit Profile"}
-        </button>
+      <Box
+        sx={{
+          bgcolor: 'background.default',
+          color: 'text.primary',
+          minHeight: '100vh',
+          p: 3,
+        }}
+      >
+        <Button variant="contained" color="primary" onClick={toggleEdit} className="my-2">
+          {isEditing ? 'Cancel' : 'Edit Profile'}
+        </Button>
         {isEditing && (
           <>
-            <input type="file" placeholder="Pick your banner "onChange={handleBannerUpload} accept="image/*" />
-            <input type="file" onChange={handleProfilePicUpload} accept="image/*" />
-
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  <FormLabel>Upload Banner Image</FormLabel>
+                  <Button variant="contained"component="label">
+                    Choose Banner
+                    <input type="file"onChange={handleBannerUpload} accept="image/*" hidden/>
+                  </Button>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  <FormLabel>Upload Profile Picture</FormLabel>
+                  <Button variant="contained" component="label">
+                    Choose Profile Picture
+                    <input type="file" onChange={handleProfilePicUpload} accept="image/*" hidden/>
+                  </Button>
+                </FormControl>
+              </Grid>
+            </Grid>
             <form onSubmit={handleSubmit} className="text-center">
+              <ThemeSelector currentTheme={themeName} onThemeChange={setThemeName} />
               <textarea
                 value={bioFormData}
                 onChange={handleChange}
                 placeholder="Tell Everyone About Yourself!"
                 className="form-control my-2"
+                style={{ width: '100%', height: '100px' }}
               />
+              
               <div className="text-center">
-                <button type="submit" className="btn btn-success" disabled={bioFormData.length > 500}>Save Changes</button>
+                <Button type="submit" variant="contained" color="success" disabled={bioFormData.length > 500}>
+                  Save Changes
+                </Button>
               </div>
             </form>
           </>
         )}
-        {
-          error ? (
-            <p>{error}</p>
-          ) : (
-        <div className='d-flex flex-column justify-content-center align-items-center text-center '>
-          <div className="border rounded px-2 py-3">
-            <h1 className='text-center'>
-            { username }
-            </h1>
-            <div className="px-5 py-1">
-              <p className="text-center">{ `${ firstName } ${ lastName }` }</p>
-              <p className="text-center">{ email }</p>
-            </div>
-        </div>
-        {business && (
-                <EndorsementLinksManager
-                  userId={profileUserId}
-                  endorsementLinks={endorsementLinks}
-                  handleAddOrUpdateLink={handleAddOrUpdateLink}
-                  handleDeleteLink={handleDeleteLink}
-                />
+        {error ? (
+          <Typography variant="body1" color="error">{error}</Typography>
+        ) : (
+          <Box className='d-flex flex-column justify-content-center align-items-center text-center'>
+            <img src={bannerUrl || '/src/assets/Revconnect.png'} alt='Banner' className='w-100 mx-3 my-3' />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 2,
+              }}
+            >
+              <img
+                src={profilePicURL || '/path/to/default/profile/pic.jpg'}
+                alt='Profile'
+                className='w-25 rounded-circle mx-3 my-3'
+                style={{ maxWidth: '150px' }}
+              />
+              <Box className="border rounded px-2 py-3" sx={{ bgcolor: 'background.paper' }}>
+                <Typography variant="h4" className='text-center'>{username}</Typography>
+                <Box className="px-5 py-1">
+                  <Typography variant="h6" className="text-center">{`${firstName} ${lastName}`}</Typography>
+                  <Typography variant="body1" className="text-center">{email}</Typography>
+                </Box>
+              </Box>
+            </Box>
+            {business && (
+              <EndorsementLinksManager
+                userId={profileUserId}
+                endorsementLinks={endorsementLinks}
+                handleAddOrUpdateLink={handleAddOrUpdateLink}
+                handleDeleteLink={handleDeleteLink}
+              />
             )}
-          <BioSection 
+            <BioSection
               bioText={bioText}
               bioFormData={bioFormData}
               setBioFormData={setBioFormData}
@@ -421,11 +464,10 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
               user={user}
               profileUserId={profileUserId}
             />
-        </div> 
-        )
-      }
-    </div>
-  )
-}
+          </Box>
+        )}
+      </Box>
+  );
+};
 
 export default BusinessProfile;

@@ -10,6 +10,7 @@ import Login from "./components/Login/Login";
 import ForgotPassword from './components/Login/ForgotPassword/ForgotPassword';
 import ResetPassword from './components/Login/ResetPassword/ResetPassword';
 import BusinessProfile from './components/BusinessProfile/BusinessProfile';
+import ThemeManager from "./components/BusinessProfile/ThemeManager";
 
 
 
@@ -27,8 +28,12 @@ export default function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password/*" element={<ResetPassword />} />
               {/* <Route path="*" element={<Navigate to="/login" />} /> */}
-      
-              <Route path="/profile/business/:id" element={ <BusinessProfile /> } />
+              <Route path="/profile/business/:id" element={
+                <ThemeManager>
+                  <BusinessProfile />
+                </ThemeManager>
+              } 
+            />
             </Routes>
           </BrowserRouter>
         </UserProvider>

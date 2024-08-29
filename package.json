@@ -12,6 +12,9 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.0.1",
     "antd": "^5.20.3",
     "axios": "^1.7.4",
     "bootstrap": "^5.3.3",
