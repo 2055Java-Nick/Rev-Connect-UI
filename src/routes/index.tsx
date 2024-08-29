@@ -15,6 +15,13 @@ export const router = createBrowserRouter([
         index: true,
         element: <Layout />,
       },
+      {path: '/create-post',
+        element: <CreatePost />,
+      },
+      {
+        path: '/posts',
+        element: <PostPage />,
+      },
     ],
   },
   {
@@ -25,11 +32,5 @@ export const router = createBrowserRouter([
     path: "/register",
     element: <RegistrationForm />,
   },
-  {path: '/create-post',
-    element: <CreatePost />,
-  },
-  {
-    path: '/posts',
-    element: <PostPage />,
-  },
+  
 ]);
