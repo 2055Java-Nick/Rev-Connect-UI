@@ -1,7 +1,7 @@
 import { IconButton } from "@mui/material";
 import React from "react";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
+import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined"; // need to run ' npm install @mui/icons-material ' or will give errors
 
 interface Media {
   mediaId: bigint;

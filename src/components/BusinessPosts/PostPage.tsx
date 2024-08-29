@@ -43,6 +43,9 @@ const PostPage: React.FC = () => {
   const fetchPosts = async (page: number) => {
     try {
       const paginatedPosts = await getPostsByPage(page);
+      /*
+       * filter out pinned and unpinned posts from paginated posts. then combine both lists and sort them to where pinned posts appear first then unpinned posts
+       */
       const pinnedPosts = paginatedPosts.filter(
         (post: { isPinned: any }) => post.isPinned
       );
@@ -112,12 +115,19 @@ const PostPage: React.FC = () => {
       console.error("Error deleting post:", error);
     }
   };
-
+  /*
+   * handles the pinning of posts
+   */
   const handlePinPost = async (postId: bigint, isPinned: boolean) => {
     const formData = new FormData();
+    // Toggle the isPinned status. If the post is currently not pinned, set "isPinned" to "true", otherwise set it to "false".
     formData.append("isPinned", !isPinned ? "true" : "false");
     await updatePostPin(postId, formData)
       .then((response) => {
+        /*
+         * Update the state of posts in the UI by mapping through the current posts.
+         * If the postId matches the post that was just updated, update the isPinned property accordingly.
+         */
         setPosts(
           posts.map((post) =>
             post.postId === postId
@@ -128,6 +138,7 @@ const PostPage: React.FC = () => {
         console.log(response);
       })
       .then(() => {
+        // After updating the pinned status, fetch the posts again to ensure the UI reflects the current state.
         fetchPosts(currentPage);
       })
       .catch((e) => {
