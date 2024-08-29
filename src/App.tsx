@@ -18,7 +18,7 @@ export default function App() {
   return (
     <>
     {/* <Login/> */}
-      <AuthProvider>
+      {/* <AuthProvider> */}
         <UserProvider >
           <RouterProvider router={router} fallbackElement={<p>Loading</p>} />
           <BrowserRouter >
@@ -26,13 +26,13 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password/*" element={<ResetPassword />} />
-              <Route path="*" element={<Navigate to="/login" />} />
+              {/* <Route path="*" element={<Navigate to="/login" />} /> */}
       
               <Route path="/profile/business/:id" element={ <BusinessProfile /> } />
             </Routes>
           </BrowserRouter>
         </UserProvider>
-      </AuthProvider>
+      {/* </AuthProvider> */}
 
         
     </>
