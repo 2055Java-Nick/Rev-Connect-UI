@@ -4,9 +4,9 @@ import { render, fireEvent, screen, waitFor } from "@testing-library/react"; // 
 import { beforeEach, describe, expect, it, vi } from "vitest"; // **Testing utilities**
 
 import CommentCard from "../components/CommentCard"; // **Import the component to test**
-import { Comment } from "../models/Comment"; // **Import the Comment model type**
+import { Comment } from "../models/CommentModel"; // **Import the Comment model type**
 import avatar from "../assets/profile-default-icon.png"; // **Import the default avatar image**
-import { likeComment } from "../services/comment"; // **Import the likeComment service (mocked later)**
+import { likeComment } from "../services/api"; // **Import the likeComment service (mocked later)**
 
 // Mock the `likeComment` service to control its behavior in tests
 vi.mock("../services/comment", () => ({
@@ -17,7 +17,7 @@ describe("CommentCard", () => {
   const mockComment: Comment = {
     commentId: 0,
     userId: 1,
-    postId: 1,
+    postId: BigInt(1),
     text: "This is a test comment",
     timePosted: new Date(),
   };

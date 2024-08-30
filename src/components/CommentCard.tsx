@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Comment } from "../models/Comment";
-import { likeComment } from "../services/comment";
+import React, { useEffect, useState } from "react";
+import { Comment as CommentType} from "../models/CommentModel";
+import { likeComment } from "../services/api";
 import "./comment.css";
 
 interface CommentCardProps {
-  comment: Comment; // The comment object containing details of the comment
+  comment: CommentType; // The comment object containing details of the comment
   likesCount: number; // Initial number of likes for the comment
   avatarUrl: string; // URL for the user's avatar image
   userId: number; // ID of the current user
@@ -20,6 +20,9 @@ const CommentCard = ({
   // Local state to manage the number of likes displayed in the UI.
   const [localLikesCount, setLocalLikesCount] = useState(likesCount);
 
+  useEffect(()=>{
+    
+  },[likesCount])
   // Function to handle when the user clicks the "Like" button.
   const handleLike = async () => {
     try {

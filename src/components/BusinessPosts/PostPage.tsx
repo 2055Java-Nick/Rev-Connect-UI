@@ -7,6 +7,7 @@ import {
 } from '../../services/api';
 import Post from './Post'; 
 import '../../styles/components/PostPage.modules.css'
+import { Post as PostType, PostResponse } from '../../models/PostModel';
 
 interface Media {
     mediaId: bigint;
@@ -16,20 +17,13 @@ interface Media {
     createdAt: string;
 }
 
-interface Post {
-    postId: bigint;
-    title: string;
-    content: string;
-}
-interface PostResponse {
-    post: Post;
-    likesCount: number;
-}
+
+
 const PostPage: React.FC = () => {
     const [postIdToEdit, setPostIdToEdit] = useState<bigint | null>(null);
     const [editTitle, setEditTitle] = useState('');
     const [editContent, setEditContent] = useState('');
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<PostResponse[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [media, setMedia] = useState<{ [key: string]: Media[] }>({});
     
@@ -39,38 +33,47 @@ const PostPage: React.FC = () => {
 
     const fetchPosts = async (page: number) => {
         try {
+            // Fetch paginated posts
             const paginatedPosts = await getPostsByPage(page);
-            setPosts(paginatedPosts);
-
-            const mediaPromises = paginatedPosts.map(async (post: Post) => {
+            
+            // Destructure PostType from PostResponse
+            const postsWithMediaPromises = paginatedPosts.map(async (postResponse: PostResponse) => {
+                // Destructure the post object
+                const { post } = postResponse;
+    
+                // Log the post for debugging
+    
+                // Fetch media for the post
                 const postMedia = await getMediaByPostId(post.postId);
+    
                 return { postId: post.postId, media: postMedia };
             });
-
-            const mediaResults = await Promise.all(mediaPromises);
-            // Reduce the array of media results into an object (mediaMap) where each key is a postId (as a string),
-            // and the value is an array of media items associated with that postId.
-            const mediaMap = mediaResults.reduce((acc, curr) => {
-            // Convert the postId to a string and use it as the key in the mediaMap object
-                acc[curr.postId.toString()] = curr.media;
-            // Return the accumulator for the next iteration
+    
+            // Resolve all media fetch promises
+            const mediaResults = await Promise.all(postsWithMediaPromises);
+    
+            // Reduce the array of media results into a mediaMap object
+            const mediaMap = mediaResults.reduce((acc, { postId, media }) => {
+                acc[postId.toString()] = media;
                 return acc;
-            // Initial value is an empty object with a specified type
             }, {} as { [key: string]: Media[] });
-            
+    
+            // Update state with posts and media
+            setPosts(paginatedPosts);
             setMedia(mediaMap);
-
+    
         } catch (error) {
             console.error('Error fetching posts:', error);
         }
     };
-
+    
+    console.log(posts)
     const handleUpdate = async (event: React.FormEvent) => {
         event.preventDefault();
         if (postIdToEdit !== null) {
             try {
                 const updatedPost = await updatePostById(postIdToEdit, editTitle, editContent);
-                setPosts(posts.map(post => (post.postId === updatedPost.postId ? updatedPost : post)));
+                setPosts(posts.map(post => (post.post.postId === updatedPost.postId ? updatedPost : post)));
                 setPostIdToEdit(null);
                 setEditTitle('');
                 setEditContent('');
@@ -83,7 +86,7 @@ const PostPage: React.FC = () => {
     const handleDelete = async (postId: bigint) => {
         try {
             await deletePostById(postId);
-            setPosts(posts.filter(post => post.postId !== postId));
+            setPosts(posts.filter(post => post.post.postId !== postId));
             if (postIdToEdit === postId) {
                 setPostIdToEdit(null);
                 setEditTitle('');
@@ -99,19 +102,19 @@ const PostPage: React.FC = () => {
         setEditTitle(title);
         setEditContent(content);
     };
-
+    console.log(media)
     return (
         <div className="post-container">
             <h2>Posts</h2>
-            <ul className="post-list">
+            <ul className="post-list ">
                 {posts.map(post => (
                     <Post 
-                        key={post.postId.toString()} 
-                        post={post} 
-                        media={media[post.postId.toString()] || []} 
+                        key={post.post.postId.toString()} 
+                        postResponse={post} 
+                        media={media[post.post.postId.toString()] || []} 
                         onEdit={handleEdit} 
                         onDelete={handleDelete} 
-                        isEditing={postIdToEdit === post.postId}
+                        isEditing={postIdToEdit === post.post.postId}
                         editTitle={editTitle}
                         editContent={editContent}
                         setEditTitle={setEditTitle}
@@ -125,7 +128,7 @@ const PostPage: React.FC = () => {
                         disabled={currentPage === 0} 
                         className="btn">
                     Previous
-                </button>
+                </button> 
                 <button onClick={() => setCurrentPage(prevPage => prevPage + 1)} className="btn">Next</button>
             </div>
         </div>

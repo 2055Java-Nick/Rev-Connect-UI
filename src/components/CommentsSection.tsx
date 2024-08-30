@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import CommentCard from "./CommentCard";
 import commentAvatar from "../assets/profile-default-icon.png";
-import { getCommentsForPost, createComment } from "../services/comment";
-import { Comment as CommentModel, CommentResponse } from "../models/Comment";
+import { getCommentsForPost, createComment } from "../services/api";
+import { Comment, CommentResponse } from "../models/CommentModel";
 
 interface CommentsSectionProps {
   postId: bigint;
@@ -12,7 +12,7 @@ interface CommentsSectionProps {
 // The CommentsSection component manages the display and addition of comments for a specific post.
 const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
   // State to hold the list of comments and the new comment being added.
-  const [comments, setComments] = useState<CommentResponse[]>([]);
+  const [commentResponseList, setComments] = useState<CommentResponse[]>([]);
   const [newComment, setNewComment] = useState<string>("");
 
   // useEffect to fetch comments when the component mounts or when postId or userId changes.
@@ -32,15 +32,15 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
 
   // useEffect to log the comments whenever they are updated.
   useEffect(() => {
-    console.log(comments);
-  }, [comments]);
+    
+  }, [commentResponseList]);
 
   // Function to handle adding a new comment.
   const handleAddComment = async () => {
     if (newComment.trim() !== "") {
       try {
         // Create a new comment object with the current time.
-        const newCommentData: CommentModel = {
+        const newCommentData: Comment = {
           userId: userId,
           postId: postId,
           text: newComment,
@@ -48,12 +48,13 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
         };
         // Send the new comment to the API and get the created comment back.
         const createdComment = await createComment(newCommentData);
+        console.log(createdComment)
         const newCommentResponse: CommentResponse = {
           comment: createdComment,
           likesCount: 0,
         };
         // Add the new comment to the state and clear the input field.
-        setComments([...comments, newCommentResponse]);
+        setComments([...commentResponseList, newCommentResponse]);
         setNewComment("");
       } catch (error) {
         // Log any errors that occur during the comment creation.
@@ -84,11 +85,11 @@ const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
       <h6 className="mt-4">Comments</h6>
       {/* Map over the comments and render a CommentCard for each */}
       <div className="mb-3">
-        {comments.map((comment) => (
+        {commentResponseList.map((commentResponse) => (
           <CommentCard
-            key={comment.comment.commentId} // Unique key for each comment
-            comment={comment.comment} // The comment data
-            likesCount={comment.likesCount} // The number of likes
+            key={commentResponse.comment.commentId} // Unique key for each comment
+            comment={commentResponse.comment} // The comment data
+            likesCount={commentResponse.likesCount} // The number of likes
             avatarUrl={commentAvatar} // URL of the avatar image
             userId={userId} // The ID of the current user, passed to CommentCard
           />

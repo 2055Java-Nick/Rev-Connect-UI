@@ -1,5 +1,8 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import CommentsSection from "../CommentsSection"
+import { PostResponse, Post as PostType } from "../../models/PostModel"
+import { likePost } from "../../services/api"
+import commentAvatar from "../../assets/profile-default-icon.png";
 
 interface Media {
 	mediaId: bigint
@@ -10,13 +13,7 @@ interface Media {
 }
 
 interface PostProps {
-	post: {
-		postId: bigint
-		title: string
-		content: string
-		createdAt: string
-		updatedAt?: string
-	}
+	postResponse: PostResponse
 	media: Media[]
 	onEdit: (postId: bigint, title: string, content: string) => void
 	onDelete: (postId: bigint) => void
@@ -29,7 +26,7 @@ interface PostProps {
 }
 
 const Post: React.FC<PostProps> = ({
-	post,
+	postResponse,
 	media,
 	onEdit,
 	onDelete,
@@ -40,11 +37,16 @@ const Post: React.FC<PostProps> = ({
 	setEditContent,
 	handleUpdate,
 }) => {
+	const [localLikesCount, setLocalLikesCount] = useState(postResponse.postLikes)
+	const { post } = postResponse
+
+	console.log(`${post.postId}: `, media)	
 	const renderMedia = (mediaList: Media[]) => {
 		return mediaList.map((mediaItem) => {
 			const imageUrl = `http://localhost:8080/attachments/${
 				mediaItem.mediaUrl
 			}?${new Date().getTime()}`
+		
 			if (mediaItem.mediaType === "IMAGE") {
 				return (
 					<img
@@ -64,17 +66,36 @@ const Post: React.FC<PostProps> = ({
 			return null
 		})
 	}
+	useEffect(() => {
+	}, [media]);
+	
+
+	const handleLike = async () => {
+		try {
+			// Call the likeComment service to like the comment.
+			const updatedPostResponse = await likePost(post.postId, post.userId)
+			// If the response is valid, update the local likes count.
+			if (updatedPostResponse) {
+				setLocalLikesCount(updatedPostResponse.postLikes)
+			}
+		} catch (error) {
+			// Log any errors that occur during the like operation.
+			console.error("Error liking comment:", error)
+		}
+	}
 
 	return (
-		<div>
+		<div className='post-box'>
 			<div>
-				<li className='post-box'>
+				<li className=''>
 					<div className='post-header'>
+						
 						<img
-							src='path-to-profile-image.jpg'
+							src={commentAvatar}
 							alt='User Profile'
 							className='profile-image'
 						/>
+						{post.userId}
 						<div className='post-details'>
 							<h4 className='post-title'>{post.title}</h4>
 							<small className='post-time'>
@@ -95,9 +116,15 @@ const Post: React.FC<PostProps> = ({
 								🗑️
 							</button>
 						</div>
+						<div>
+							<button className='btn btn-outline-primary btn-sm' onClick={handleLike}>
+								Like ({localLikesCount})
+							</button>
+						</div>
 					</div>
 					<p className='post-content'>{post.content}</p>
 					{media && renderMedia(media)}
+					
 					{post.updatedAt && (
 						<small className='post-updated'>
 							Updated at: {new Date(post.updatedAt).toLocaleString()}

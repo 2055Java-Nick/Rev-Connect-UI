@@ -16,7 +16,7 @@ vi.mock("../services/comment", () => ({
   likeComment: vi.fn(), // Mock function for liking a comment
 }));
 
-import { CommentResponse } from "../models/Comment";
+import { CommentResponse } from "../models/CommentModel";
 
 // Describe the test suite for the CommentsSection component
 describe("CommentsSection", () => {

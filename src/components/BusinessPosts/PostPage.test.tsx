@@ -16,16 +16,18 @@ describe('PostPage Component', () => {
     const mockPosts = [
         {
             postId: BigInt(1),
+            userId: 1,
             title: 'Test Post 1',
-            content: 'Content for Post 1',
-            createdAt: '2024-08-19T12:00:00Z',
-            updatedAt: '2024-08-19T14:00:00Z',
+            content: 'Content for Test Post 1',
+            createdAt: 1724765164565,
+            updatedAt: 1724765164565,
         },
         {
             postId: BigInt(2),
+            userId: 2,
             title: 'Test Post 2',
-            content: 'Content for Post 2',
-            createdAt: '2024-08-18T12:00:00Z',
+            content: 'Content for Test Post 2',
+            createdAt: 1724765164565,
         },
     ];
 
@@ -53,34 +55,35 @@ describe('PostPage Component', () => {
 
         // Wait for posts to load
         await waitFor(() => {
-            const post1 = screen.getByText((content, element) => 
-                element?.tagName.toLowerCase() === 'h4' && content.includes('Test Post 1')
-            );
-            const post2 = screen.getByText((content, element) => 
-                element?.tagName.toLowerCase() === 'h4' && content.includes('Test Post 2')
-            );
-
-            expect(post1).toBeInTheDocument();
-            expect(post2).toBeInTheDocument();
+            // Ensure that post titles are in the document
+            expect(screen.getByText('Test Post 1')).toBeInTheDocument();
+            expect(screen.getByText('Test Post 2')).toBeInTheDocument();
         });
     });
 
     test('handles pagination', async () => {
         render(<PostPage />);
 
-        await waitFor(() => expect(screen.getByText((content, element) => 
-            element?.tagName.toLowerCase() === 'h4' && content.includes('Test Post 1')
-        )).toBeInTheDocument());
+        // Wait for initial posts to load
+        await waitFor(() => {
+            expect(screen.getByText('Test Post 1')).toBeInTheDocument();
+            expect(screen.getByText('Test Post 2')).toBeInTheDocument();
+        });
 
         // Click next page button
         fireEvent.click(screen.getByRole('button', { name: /Next/i }));
 
-        // Ensure getPostsByPage was called with the correct page number
-        await waitFor(() => expect(getPostsByPage).toHaveBeenCalledWith(1));
+        // Ensure getPostsByPage was called with the correct page number (1)
+        await waitFor(() => {
+            expect(getPostsByPage).toHaveBeenCalledWith(1);
+        });
 
         // Click previous page button
         fireEvent.click(screen.getByRole('button', { name: /Previous/i }));
 
-        await waitFor(() => expect(getPostsByPage).toHaveBeenCalledWith(0));
+        // Ensure getPostsByPage was called with the correct page number (0)
+        await waitFor(() => {
+            expect(getPostsByPage).toHaveBeenCalledWith(0);
+        });
     });
 });
