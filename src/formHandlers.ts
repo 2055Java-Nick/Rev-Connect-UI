@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { FormProps } from 'antd';
-import { FieldType } from './components/RegistrationForm/RegistrationForm';
+import { FormData } from './types/user.ts';
 import { useNavigate } from 'react-router-dom';
 
-export const onFinish = (navigate: ReturnType<typeof useNavigate>): FormProps<FieldType>['onFinish'] => async (values) => {
+export const onFinish = (navigate: ReturnType<typeof useNavigate>): FormProps<FormData>['onFinish'] => async (values) => {
   console.log('Form Data:', values);
 
 
   try {
-    const response = await axios.post('http://localhost:5000/register', values, {
+    const response = await axios.post('http://localhost:8080/api/register', values, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -25,6 +25,6 @@ export const onFinish = (navigate: ReturnType<typeof useNavigate>): FormProps<Fi
   }
 };
 
-export const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+export const onFinishFailed: FormProps<FormData>['onFinishFailed'] = (errorInfo) => {
   console.error('Failed:', errorInfo);
 };

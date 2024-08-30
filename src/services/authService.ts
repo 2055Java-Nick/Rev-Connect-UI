@@ -10,7 +10,7 @@ export async function loginUser(data: LoginData) {
   return handleApiResponse<LoginResponse>(response);
 }
 
-export async function registerUser(data: any) {
+export async function registerUser(data: unknown) {
   const response = await apiClient.post("/users/register", data);
   return handleApiResponse(response);
 }

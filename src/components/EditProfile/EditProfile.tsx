@@ -10,7 +10,7 @@ import { FormData } from '../../types/user';
 const { Option } = Select; // Destructure Option from Select for easier usage
 
 
-const EditForm: React.FC = () => {
+const EditProfile: React.FC = () => {
   const navigate = useNavigate(); // Initialize the navigate function
 
   // Function to handle form submission success
@@ -104,4 +104,4 @@ const EditForm: React.FC = () => {
   );
 };
 
-export default EditForm; // Export the EditForm component as default
+export default EditProfile; // Export the EditForm component as default

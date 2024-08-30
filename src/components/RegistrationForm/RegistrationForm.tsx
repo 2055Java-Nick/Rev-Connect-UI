@@ -23,7 +23,7 @@ const RegistrationForm: React.FC = () => {
   const handleFinish = (values: Store) => {
     console.log('Success:', values);
     // Handle form submission
-    navigate(`/edit-profile/`); // Navigate to the landing page
+    navigate(`/users/:id/`); // Navigate to the landing page
   };
   
   const handleFinishFailed = (errorInfo: ValidateErrorEntity) => {
