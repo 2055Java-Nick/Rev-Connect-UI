@@ -3,9 +3,9 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PostPage from './PostPage';
 import { describe, expect, vi, beforeEach, afterEach, test } from 'vitest';
-import { deletePostById, getMediaByPostId, getPostsByPage, updatePostById } from '../../services/api';
+import { deletePostById, getMediaByPostId, getPostsByPage, updatePostById } from '../../services/postApi';
 
-vi.mock('../../services/api', () => ({
+vi.mock('../../services/postApi', () => ({
     getPostsByPage: vi.fn(),
     updatePostById: vi.fn(),
     deletePostById: vi.fn(),
@@ -55,20 +55,22 @@ describe('PostPage Component', () => {
 
         // Wait for posts to load
         await waitFor(() => {
-            // Ensure that post titles are in the document
-            expect(screen.getByText('Test Post 1')).toBeInTheDocument();
-            expect(screen.getByText('Test Post 2')).toBeInTheDocument();
+            const post1 = screen.getByText((content, element) => 
+                content.includes("Test Post 1") && element?.tagName.toLowerCase() === "h5"
+            );
+            const post2 = screen.getByText((content, element) => 
+                content.includes("Test Post 2") && element?.tagName.toLowerCase() === "h5"
+            );
+
+            expect(post1).toBeInTheDocument();
+            expect(post2).toBeInTheDocument();
         });
     });
 
     test('handles pagination', async () => {
         render(<PostPage />);
 
-        // Wait for initial posts to load
-        await waitFor(() => {
-            expect(screen.getByText('Test Post 1')).toBeInTheDocument();
-            expect(screen.getByText('Test Post 2')).toBeInTheDocument();
-        });
+        await waitFor(() => expect(screen.getByText('Test Post 1')).toBeInTheDocument());
 
         // Click next page button
         fireEvent.click(screen.getByRole('button', { name: /Next/i }));

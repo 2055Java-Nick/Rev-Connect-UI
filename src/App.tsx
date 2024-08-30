@@ -1,20 +1,12 @@
-import './App.css'
-import Post from './components/BusinessPosts/PostPage'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CreatePost from './components/BusinessPosts/CreatePost';
+import { RouterProvider } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { router } from "./routes";
 
-
-function App() {
-  
-
+export default function App() {
   return (
-    <Router>
-      <Routes>
-          <Route path="/create-post" element={<CreatePost />} />
-          <Route path="/posts" element={<Post />} />
-      </Routes>
-    </Router>
-  )
+    <AuthProvider>
+      <RouterProvider router={router} fallbackElement={<p>Loading</p>} />
+    </AuthProvider>
+  );
 }
 
-export default App;
