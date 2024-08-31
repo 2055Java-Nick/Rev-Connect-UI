@@ -1,37 +1,39 @@
-import axios from 'axios';
-
-const BASE_URL = import.meta.env.VITE_API_URL; // This pulls the base URL from your .env file
+//const BASE_URL = import.meta.env.VITE_API_URL; // This pulls the base URL from your .env file
 
 export const createPost = async (formData: FormData) => {
-    const response = await axios.post(`${BASE_URL}/post`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
-    return response.data;
+  console.log(formData.values());
+  const response = await apiClient.post(`/posts`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
 };
+import { Post, PostUpdate } from "../types/postTypes";
+import apiClient from "./api";
 
 export const getPostById = async (id: number) => {
-    const response = await axios.get(`${BASE_URL}/post/${id}`);
-    return response.data;
+  const response = await apiClient.get(`/posts/${id}`);
+  return response.data;
 };
 
-export const updatePostById = async (id: number, title: string, content: string) => {
-    const response = await axios.patch(`${BASE_URL}/post/${id}`, { title, content });
-    return response.data;
+export const updatePostById = async (post: PostUpdate) => {
+  console.log(post);
+  const response = await apiClient.put(`/posts/${post.postId}`, post);
+  return response.data;
 };
 
 export const deletePostById = async (id: number) => {
-    const response = await axios.delete(`${BASE_URL}/post/${id}`);
-    return response.data;
+  const response = await apiClient.delete(`/posts/${id}`);
+  return response.data;
 };
 
 export const getPostsByPage = async (page: number) => {
-    const response = await axios.get(`${BASE_URL}/post?page=${page}`);
-    return response.data;
+  const response = await apiClient.get(`/posts`);
+  return response.data;
 };
 
 export const getMediaByPostId = async (postId: number) => {
-    const response = await axios.get(`${BASE_URL}/post/media/${postId}`);
-    return response.data;
+  const response = await apiClient.get(`/posts/media/${postId}`);
+  return response.data;
 };
