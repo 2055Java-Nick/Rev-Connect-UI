@@ -1,22 +1,55 @@
+import { useContext } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 
-const Layout = () => {
+export default function Layout() {
+  const authContext = useContext(AuthContext);
+
   return (
-    <div>
-      <nav>
+    <>
+      <nav className="p-3">
         <h1>RevConnect</h1>
-        <ul>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/register">Register</Link>
-          </li>
-        </ul>
+        <NavLinks
+          token={authContext?.isAuthenticated}
+          logoutUser={authContext?.logoutUser}
+        />
       </nav>
       <Outlet />
-    </div>
+    </>
   );
-};
+}
+/**
+ * @param token Whether user is authenticated, or if a session token is present.
+ * @param logoutUser Callback to log out the user.
+ * @returns List group of links, conditionally rendered based on auth status.
+ */
+function NavLinks({
+  token,
+  logoutUser,
+}: {
+  token?: boolean;
+  logoutUser?: () => void;
+}) {
+  function links() {
+    if (token) {
+      return (
+        <button className="list-group-item" onClick={logoutUser}>
+          Logout
+        </button>
+      );
+    }
 
-export default Layout;
+    return (
+      <>
+        <Link to="/login" className="list-group-item">
+          Login
+        </Link>
+        <Link to="/register" className="list-group-item">
+          Register
+        </Link>
+      </>
+    );
+  }
+
+  return <div className="d-line-flex list-group w-25 m-auto">{links()}</div>;
+}

@@ -9,16 +9,17 @@ import PostPage from "../components/BusinessPosts/PostPage";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute />,
+    element: <Layout />,
     children: [
       {
-        index: true,
-        element: <Layout />,
-      },
-      { path: "/create-post", element: <CreatePost /> },
-      {
-        path: "/posts",
-        element: <PostPage />,
+        element: <ProtectedRoute />,
+        children: [
+          { path: "/create-post", element: <CreatePost /> },
+          {
+            path: "/posts",
+            element: <PostPage />,
+          },
+        ],
       },
     ],
   },
