@@ -15,7 +15,7 @@ export function useCreatePost() {
     try {
       const { data } = await createPost(post);
       setNewPost(data as Post);
-      return data;
+      return data as Post;
     } catch (error) {
       setError(error as ApiError);
       throw error;

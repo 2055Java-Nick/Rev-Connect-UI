@@ -1,23 +1,10 @@
 import { createContext, ReactNode, useState } from "react";
 import { useFetchPosts } from "../hooks/useFetchPosts";
-import { Post, PostUpdate } from "../types/postTypes";
-import { ApiError } from "../services/errors";
+import { PostUpdate } from "../types/postTypes";
 import { useCreatePost } from "../hooks/useCreatePost";
 import { useUpdatePost } from "../hooks/useUpdatePost";
 import { useDeletePost } from "../hooks/useDeletePost";
-
-interface PostContextProps {
-  posts: Post[];
-  loading: boolean;
-  error: ApiError | null;
-  createPost: (post: PostUpdate) => Promise<Post>;
-  updatePost: (post: PostUpdate) => Promise<Post>;
-  deletePost: (postId: number) => Promise<void>;
-  refetchPosts: () => void;
-  page: number | undefined;
-  goToPreviousPage: () => void;
-  goToNextPage: () => void;
-}
+import { PostContextProps } from "../types/props";
 
 export const PostsContext = createContext<PostContextProps | undefined>(
   undefined,
@@ -38,13 +25,15 @@ export function PostsProvider({ children }: { children: ReactNode }) {
   }
 
   async function createPost(post: PostUpdate) {
-    await handleCreatePost(post);
+    const response = await handleCreatePost(post);
     refetchPosts();
+    return response;
   }
 
   async function updatePost(post: PostUpdate) {
-    await handleUpdatePost(post);
+    const response = await handleUpdatePost(post);
     refetchPosts();
+    return response;
   }
 
   async function deletePost(postId: number) {

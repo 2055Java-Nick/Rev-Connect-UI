@@ -15,7 +15,7 @@ export function useUpdatePost() {
     try {
       const { data } = await updatePost(post);
       setUpdatedPost(data as Post);
-      return data;
+      return data as Post;
     } catch (error) {
       setError(error as ApiError);
       throw error;

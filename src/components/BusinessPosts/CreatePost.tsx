@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePostsContext } from "../../hooks/usePostsContext";
 import { Post, PostUpdate } from "../../types/postTypes";
@@ -27,17 +27,21 @@ export default function CreatePost() {
         taggedUserIds: [],
       } as PostUpdate;
 
-      const { data } = await createPost(newPost);
-      console.log("data from created post\n\n", data);
-      setCreatedPost(data);
+      const response = await createPost(newPost);
+      setCreatedPost(response);
     } catch (error) {
       setError(error as ApiError);
       throw error;
     } finally {
-      navigate("/posts/" + createdPost?.postId);
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (createdPost) {
+      navigate("/posts/" + createdPost.postId);
+    }
+  }, [createdPost, navigate]);
 
   if (error) return <>{error.message}</>;
   if (loading) return <>Loading...</>;

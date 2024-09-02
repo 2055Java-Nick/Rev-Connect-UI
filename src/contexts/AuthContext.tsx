@@ -5,6 +5,7 @@ import {
 } from "../services/authService";
 import { AuthContextProps } from "../types/props";
 import { Post } from "../types/postTypes";
+import { ApiError } from "../services/errors";
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
   undefined,
@@ -15,7 +16,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.getItem("token"),
   );
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ApiError | null>(null);
 
   const loginUser = async (username: string, password: string) => {
     setLoading(true);
@@ -25,7 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(data.token);
       localStorage.setItem("token", data.token);
     } catch (err) {
-      setError("Failed to log in. Please check your credentials.");
+      setError(err as ApiError);
     } finally {
       setLoading(false);
     }
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await authRegisterUser(data);
     } catch (err) {
-      setError("Failed to register. Please try again.");
+      setError(err as ApiError);
     } finally {
       setLoading(false);
     }
