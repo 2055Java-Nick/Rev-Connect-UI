@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import RegistrationForm from "../components/RegistrationForm/RegistrationForm";
-import LoginPage from "../components/LoginPage/LoginPage";
+import LoginPage from "../pages/LoginPage";
 import Layout from "../pages/Layout";
-import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "../components/common/ProtectedRoute";
 import CreatePost from "../components/BusinessPosts/CreatePost";
 import PostPage from "../components/BusinessPosts/PostPage";
 
