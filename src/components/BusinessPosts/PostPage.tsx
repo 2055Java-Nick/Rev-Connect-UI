@@ -1,24 +1,11 @@
-import React from "react";
 import Post from "./Post";
-import { usePosts } from "../../hooks/usePosts";
+import { usePostsContext } from "../../hooks/usePostsContext";
 
-const PostPage: React.FC = () => {
-  const {
-    posts,
-    media,
-    currentPage,
-    goToPreviousPage,
-    goToNextPage,
-    handleUpdate,
-    handleDelete,
-    setPostToEdit,
-    postToEdit,
-    loading,
-    error,
-  } = usePosts(0);
-
+export default function PostPage() {
+  const { posts, loading, error, page, goToPreviousPage, goToNextPage } =
+    usePostsContext();
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (error) return <p>{error.message}</p>;
 
   return (
     <div className="container">
@@ -26,21 +13,14 @@ const PostPage: React.FC = () => {
       <ul className="list-group">
         {posts.map((post) => (
           <li className="list-group-item" key={post.postId.toString()}>
-            <Post
-              post={post}
-              media={media[post.postId.toString()] || []}
-              onEdit={setPostToEdit}
-              onDelete={handleDelete}
-              isEditing={postToEdit?.postId === post.postId}
-              handleUpdate={handleUpdate}
-            />
+            <Post post={post} />
           </li>
         ))}
       </ul>
       <div className="d-flex justify-content-between my-4">
         <button
           onClick={goToPreviousPage}
-          disabled={currentPage === 0}
+          disabled={page === 0}
           className="btn btn-secondary"
         >
           Previous
@@ -51,6 +31,4 @@ const PostPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default PostPage;
+}

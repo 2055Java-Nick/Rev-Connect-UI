@@ -1,37 +1,27 @@
-import React from "react";
-import { Media, PostProps } from "../../types/postTypes";
+import React, { FormEvent, useState } from "react";
+import { PostProps, PostUpdate } from "../../types/postTypes";
+import { usePostsContext } from "../../hooks/usePostsContext";
 
-const Post: React.FC<PostProps> = ({
-  post,
-  media,
-  onEdit,
-  onDelete,
-  isEditing,
-  handleUpdate,
-}) => {
-  const renderMedia = (mediaList: Media[]) => {
-    return mediaList.map((mediaItem) => {
-      const imageUrl = `http://localhost:8080/attachments/${mediaItem.mediaUrl}?${new Date().getTime()}`;
-      if (mediaItem.mediaType === "IMAGE") {
-        return (
-          <img
-            key={mediaItem.mediaId.toString()}
-            src={imageUrl}
-            alt="Post Media"
-            className="img-fluid my-2"
-          />
-        );
-      } else if (mediaItem.mediaType === "VIDEO") {
-        return (
-          <video key={mediaItem.mediaId.toString()} controls className="w-100">
-            <source src={imageUrl} type="video/mp4" />
-          </video>
-        );
-      }
-      return null;
-    });
-  };
+const Post: React.FC<PostProps> = ({ post }) => {
+  const { updatePost, deletePost } = usePostsContext();
 
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [title, setTitle] = useState<string | undefined>(post.title);
+  const [content, setContent] = useState<string | undefined>(post.content);
+
+  async function handleSave(e: FormEvent) {
+    e.preventDefault();
+    const updatedPost = {
+      ...post,
+      title,
+      content,
+      taggedUserIds: [],
+      tagNames: [],
+    } as PostUpdate;
+
+    await updatePost(updatedPost);
+    setIsEditing(false);
+  }
   return (
     <div className="card mb-3">
       <div className="card-body">
@@ -50,14 +40,14 @@ const Post: React.FC<PostProps> = ({
           </div>
           <div>
             <button
-              onClick={() => onEdit(post)}
+              onClick={() => setIsEditing(!isEditing)}
               className="btn btn-sm btn-outline-primary me-2"
               title="Edit Post"
             >
               ✎
             </button>
             <button
-              onClick={() => onDelete(post.postId)}
+              onClick={() => deletePost(post.postId)}
               className="btn btn-sm btn-outline-danger"
               title="Delete Post"
             >
@@ -66,7 +56,6 @@ const Post: React.FC<PostProps> = ({
           </div>
         </div>
         <p className="card-text">{post.content}</p>
-        {media && renderMedia(media)}
         {post.updatedAt && (
           <small className="text-muted">
             Updated at: {new Date(post.updatedAt).toLocaleString()}
@@ -76,7 +65,7 @@ const Post: React.FC<PostProps> = ({
 
       {isEditing && (
         <div className="card-footer">
-          <form onSubmit={(e) => handleUpdate(e, post)}>
+          <form onSubmit={(e) => handleSave(e)}>
             <div className="mb-3">
               <label htmlFor="editTitle" className="form-label">
                 New Title:
@@ -84,8 +73,8 @@ const Post: React.FC<PostProps> = ({
               <input
                 id="editTitle"
                 type="text"
-                value={post.title}
-                onChange={(e) => onEdit({ ...post, title: e.target.value })}
+                defaultValue={post.title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
                 className="form-control"
               />
@@ -96,8 +85,8 @@ const Post: React.FC<PostProps> = ({
               </label>
               <textarea
                 id="editContent"
-                value={post.content}
-                onChange={(e) => onEdit({ ...post, content: e.target.value })}
+                defaultValue={post.content}
+                onChange={(e) => setContent(e.target.value)}
                 required
                 className="form-control"
               />

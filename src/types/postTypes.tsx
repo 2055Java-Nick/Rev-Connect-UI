@@ -18,7 +18,7 @@ export interface Post {
 }
 
 export interface PostUpdate {
-  postId: number;
+  postId?: number;
   authorId: number;
   title: string;
   content: string;
@@ -30,9 +30,4 @@ export interface PostUpdate {
 
 export interface PostProps {
   post: Post;
-  media?: Media[];
-  onEdit: (post: Post) => void;
-  onDelete: (postId: number) => void;
-  isEditing: boolean;
-  handleUpdate: (event: React.FormEvent, post: PostUpdate) => void;
 }
