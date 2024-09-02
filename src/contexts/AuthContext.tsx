@@ -1,9 +1,10 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 import {
   loginUser as authLoginUser,
   registerUser as authRegisterUser,
 } from "../services/authService";
 import { AuthContextProps } from "../types/props";
+import { Post } from "../types/postTypes";
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
   undefined,
@@ -35,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(null);
   };
 
-  const registerUser = async (data: any) => {
+  const registerUser = async (data: Post) => {
     setLoading(true);
     setError(null);
     try {
