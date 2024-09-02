@@ -12,11 +12,17 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
+        // TODO: maybe use a higher order component for route protection
         element: <ProtectedRoute />,
         children: [
           { path: "/create-post", element: <CreatePost /> },
           {
             path: "/posts",
+            element: <PostPage />,
+          },
+          {
+            // TODO: use actual landing page for a specific post
+            path: "/posts/:postId",
             element: <PostPage />,
           },
         ],

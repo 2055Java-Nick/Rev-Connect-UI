@@ -32,7 +32,7 @@ export const deletePostById = async (id: number) => {
 };
 
 export const getPostsByPage = async (page: number) => {
-  const response = await apiClient.get(`${BASE_URL}?page=${page}`);
+  const response = await apiClient.get(`${BASE_URL}/recent?page=${page}`);
   return handleApiResponse(response);
 };
 

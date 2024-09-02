@@ -33,9 +33,14 @@ function NavLinks({
   function links() {
     if (token) {
       return (
-        <button className="list-group-item" onClick={logoutUser}>
-          Logout
-        </button>
+        <>
+          <Link to="/create-post" className="list-group-item text-center">
+            Create a Post
+          </Link>
+          <button className="list-group-item text-center" onClick={logoutUser}>
+            Logout
+          </button>
+        </>
       );
     }
 
@@ -51,5 +56,5 @@ function NavLinks({
     );
   }
 
-  return <div className="d-line-flex list-group w-25 m-auto">{links()}</div>;
+  return <div className="d-line-flex list-group w-25">{links()}</div>;
 }
