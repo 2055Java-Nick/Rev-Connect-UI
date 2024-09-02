@@ -1,15 +1,24 @@
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { handleLogin, loading, error } = useAuth();
+  const { loginUser, loading, error } = useAuthContext();
+
+  const navigate = useNavigate();
+
+  async function handleLogin() {
+    await loginUser(username, password);
+    navigate("/posts");
+  }
+
+  if (error) return <p style={{ color: "red" }}>{error.message}</p>;
 
   return (
     <div>
       <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error.message}</p>}
       <div>
         <label>
           Username:
@@ -30,14 +39,11 @@ const LoginPage = () => {
           />
         </label>
       </div>
-      <button
-        onClick={() => handleLogin(username, password)}
-        disabled={loading}
-      >
+      <button onClick={handleLogin} disabled={loading}>
         {loading ? "Logging in..." : "Login"}
       </button>
       <p>
-        Don't have an account? <a href="/register">Register here</a>
+        Don't have an account? <Link to="/register">Register here</Link>
       </p>
     </div>
   );
