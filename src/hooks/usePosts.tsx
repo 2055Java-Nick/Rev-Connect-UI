@@ -23,18 +23,19 @@ export const usePosts = (initialPage: number = 0) => {
             const paginatedPosts = await getPostsByPage(page);
             setPosts(paginatedPosts);
 
-            const mediaPromises = paginatedPosts.map(async (post) => {
-                const postMedia = await getMediaByPostId(post.postId);
-                return { postId: post.postId, media: postMedia };
-            });
+        //     const mediaPromises = paginatedPosts.map(async (post) => {
+        //         const postMedia = await getMediaByPostId(post.postId);
+        //         return { postId: post.postId, media: postMedia };
+        //     }
+        // );
 
-            const mediaResults = await Promise.all(mediaPromises);
-            const mediaMap = mediaResults.reduce((acc, curr) => {
-                acc[curr.postId.toString()] = curr.media;
-                return acc;
-            }, {} as { [key: string]: Media[] });
+        //     const mediaResults = await Promise.all(mediaPromises);
+        //     const mediaMap = mediaResults.reduce((acc, curr) => {
+        //         acc[curr.postId.toString()] = curr.media;
+        //         return acc;
+        //     }, {} as { [key: string]: Media[] });
 
-            setMedia(mediaMap);
+        //     setMedia(mediaMap);
         } catch (err) {
             setError('Error fetching posts');
             console.error('Error fetching posts:', err);

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Media, PostProps } from '../../types/postTypes';
+import CommentsSection from '../CommentsSection';
 
 
 const Post: React.FC<PostProps> = ({
-	postResponse,
-	media,
+	post,
+	// media,
 	onEdit,
 	onDelete,
 	isEditing,
@@ -15,6 +16,7 @@ const Post: React.FC<PostProps> = ({
 	handleUpdate,
 }) => {
     const renderMedia = (mediaList: Media[]) => {
+        console.log(post);
         return mediaList.map((mediaItem) => {
             const imageUrl = `http://localhost:8080/attachments/${mediaItem.mediaUrl}?${new Date().getTime()}`;
             if (mediaItem.mediaType === 'IMAGE') {
@@ -63,10 +65,11 @@ const Post: React.FC<PostProps> = ({
                     </div>
                 </div>
                 <p className="card-text">{post.content}</p>
-                {media && renderMedia(media)}
+                {/* {media && renderMedia(media)} */}
                 {post.updatedAt && <small className="text-muted">Updated at: {new Date(post.updatedAt).toLocaleString()}</small>}
+                <CommentsSection postId={post.postId} userId={1} />
             </div>
-
+            
             {isEditing && (
                 <div className="card-footer">
                     <form onSubmit={handleUpdate}>

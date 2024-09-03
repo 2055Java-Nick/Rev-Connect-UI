@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Comment as CommentType} from "../models/CommentModel";
-import { likeComment } from "../services/api";
+import { likeComment } from "../services/comment";
 import "./comment.css";
 
 interface CommentCardProps {

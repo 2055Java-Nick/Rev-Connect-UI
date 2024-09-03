@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import CommentCard from "./CommentCard";
 import commentAvatar from "../assets/profile-default-icon.png";
-import { getCommentsForPost, createComment } from "../services/api";
-import { Comment, CommentResponse } from "../models/CommentModel";
-
-interface CommentsSectionProps {
-  postId: bigint;
-  userId: number;
-}
+import { getCommentsForPost, createComment } from "../services/comment";
+import { Comment, CommentResponse, CommentsSectionProps } from "../models/CommentModel";
 
 // The CommentsSection component manages the display and addition of comments for a specific post.
 const CommentsSection = ({ postId, userId }: CommentsSectionProps) => {
