@@ -401,13 +401,15 @@ const BusinessProfile: React.FC<BusinessProfileProps> = ({ }) => {
             </Grid>
             <form onSubmit={handleSubmit} className="text-center">
               <ThemeSelector currentTheme={themeName} onThemeChange={setThemeName} />
-              <textarea
+              
+              {/*For changing Bio with the button */
+              /* <textarea 
                 value={bioFormData}
                 onChange={handleChange}
                 placeholder="Tell Everyone About Yourself!"
                 className="form-control my-2"
                 style={{ width: '100%', height: '100px' }}
-              />
+              /> */}
               
               <div className="text-center">
                 <Button type="submit" variant="contained" color="success" disabled={bioFormData.length > 500}>
