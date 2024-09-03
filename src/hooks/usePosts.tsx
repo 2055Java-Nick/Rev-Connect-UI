@@ -107,3 +107,4 @@ export const usePosts = (initialPage: number = 0) => {
         error,
     };
 };
+
