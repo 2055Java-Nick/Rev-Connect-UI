@@ -25,6 +25,7 @@ export default function CreatePost() {
         authorId: 1,
         content: newContent,
         tagNames: [],
+        taggedUserIds: [],
         isPrivate: isPrivate,
       } as PostUpdate;
 
