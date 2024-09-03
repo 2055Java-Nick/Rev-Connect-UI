@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080/api/post";
+const BASE_URL = import.meta.env.VITE_API_URL; // This pulls the base URL from your .env file
 
 export const createPost = async (formData: FormData) => {
-  const response = await axios.post(API_BASE_URL, formData, {
+  const response = await axios.post(`${BASE_URL}/post`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -11,39 +11,39 @@ export const createPost = async (formData: FormData) => {
   return response.data;
 };
 
-export const getPostById = async (id: bigint) => {
-  const response = await axios.get(`${API_BASE_URL}/${id}`);
+export const getPostById = async (id: number) => {
+  const response = await axios.get(`${BASE_URL}/post/${id}`);
   return response.data;
 };
 
 export const updatePostById = async (
-  id: bigint,
+  id: number,
   title: string,
   content: string
 ) => {
-  const response = await axios.patch(`${API_BASE_URL}/${id}`, {
+  const response = await axios.patch(`${BASE_URL}/post/${id}`, {
     title,
     content,
   });
   return response.data;
 };
 
-export const deletePostById = async (id: bigint) => {
-  const response = await axios.delete(`${API_BASE_URL}/${id}`);
+export const deletePostById = async (id: number) => {
+  const response = await axios.delete(`${BASE_URL}/post/${id}`);
   return response.data;
 };
 
 export const getPostsByPage = async (page: number) => {
-  const response = await axios.get(`${API_BASE_URL}?page=${page}`);
+  const response = await axios.get(`${BASE_URL}/post?page=${page}`);
   return response.data;
 };
 
-export const getMediaByPostId = async (postId: bigint) => {
-  const response = await axios.get(`${API_BASE_URL}/media/${postId}`);
+export const getMediaByPostId = async (postId: number) => {
+  const response = await axios.get(`${BASE_URL}/post/media/${postId}`);
   return response.data;
 };
 
-export const updatePostPin = async (id: bigint, formData: FormData) => {
-  const response = await axios.post(`${API_BASE_URL}/pin/${id}`, formData);
+export const updatePostPin = async (id: number, formData: FormData) => {
+  const response = await axios.post(`${BASE_URL}/pin/${id}`, formData);
   return response.data;
 };

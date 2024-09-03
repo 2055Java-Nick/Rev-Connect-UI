@@ -25,14 +25,12 @@ describe("PostPage Component", () => {
       content: "Content for Post 1",
       createdAt: "2024-08-19T12:00:00Z",
       updatedAt: "2024-08-19T14:00:00Z",
-      isPinned: false,
     },
     {
       postId: BigInt(2),
       title: "Test Post 2",
       content: "Content for Post 2",
       createdAt: "2024-08-18T12:00:00Z",
-      isPinned: false,
     },
   ];
 
@@ -62,13 +60,13 @@ describe("PostPage Component", () => {
     await waitFor(() => {
       const post1 = screen.getByText(
         (content, element) =>
-          element?.tagName.toLowerCase() === "h4" &&
-          content.includes("Test Post 1")
+          content.includes("Test Post 1") &&
+          element?.tagName.toLowerCase() === "h5"
       );
       const post2 = screen.getByText(
         (content, element) =>
-          element?.tagName.toLowerCase() === "h4" &&
-          content.includes("Test Post 2")
+          content.includes("Test Post 2") &&
+          element?.tagName.toLowerCase() === "h5"
       );
 
       expect(post1).toBeInTheDocument();
@@ -80,13 +78,7 @@ describe("PostPage Component", () => {
     render(<PostPage />);
 
     await waitFor(() =>
-      expect(
-        screen.getByText(
-          (content, element) =>
-            element?.tagName.toLowerCase() === "h4" &&
-            content.includes("Test Post 1")
-        )
-      ).toBeInTheDocument()
+      expect(screen.getByText("Test Post 1")).toBeInTheDocument()
     );
 
     // Click next page button
