@@ -1,13 +1,17 @@
 import React, { FormEvent, useState } from "react";
 import { PostProps, PostUpdate } from "../../types/postTypes";
 import { usePostsContext } from "../../hooks/usePostsContext";
+import { IconButton } from "@mui/material";
+import PushPinIcon from "@mui/icons-material/PushPin";
+import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined"; // need to run ' npm install @mui/icons-material ' or will give errors
 
 const Post: React.FC<PostProps> = ({ post }) => {
-  const { updatePost, deletePost } = usePostsContext();
+  const { updatePost, deletePost, pinPost } = usePostsContext(); //add pinPost method later
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [title, setTitle] = useState<string | undefined>(post.title);
   const [content, setContent] = useState<string | undefined>(post.content);
+  const [isPinned, setIsPinned] = useState<boolean | undefined>(post.isPinned);
 
   async function handleSave(e: FormEvent) {
     e.preventDefault();
@@ -21,6 +25,19 @@ const Post: React.FC<PostProps> = ({ post }) => {
 
     await updatePost(updatedPost);
     setIsEditing(false);
+  }
+  async function handlePinPost() {
+    setIsPinned(!isPinned);
+    const updatedPost = {
+      ...post,
+      title,
+      content,
+      taggedUserIds: [],
+      tagNames: [],
+      isPinned,
+    };
+
+    await pinPost(post);
   }
   return (
     <div className="card mb-3">
@@ -53,6 +70,12 @@ const Post: React.FC<PostProps> = ({ post }) => {
             >
               🗑️
             </button>
+            <IconButton
+              onClick={handlePinPost}
+              title={post.isPinned ? "Unpin Post" : "Pin Post"} // Change title based on state
+            >
+              {post.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
+            </IconButton>
           </div>
         </div>
         <p className="card-text">{post.content}</p>

@@ -29,7 +29,7 @@ apiClient.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 // global error handling if needed
@@ -51,12 +51,12 @@ apiClient.interceptors.response.use(
       const apiError = new ApiError(
         message || "Ooops, an error occured",
         statusCode,
-        error.response.data?.details,
+        error.response.data?.details
       );
       return Promise.reject(apiError);
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 // logging if needed
@@ -71,7 +71,7 @@ apiClient.interceptors.response.use(
   (error) => {
     log.error("API Error: ", error);
     return Promise.reject(error);
-  },
+  }
 );
 
 export default apiClient;

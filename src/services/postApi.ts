@@ -40,3 +40,12 @@ export const getMediaByPostId = async (postId: number) => {
   const response = await apiClient.get(`${BASE_URL}/media/${postId}`);
   return handleApiResponse(response);
 };
+
+export const updatePostPin = async (post: PostUpdate) => {
+  const id = post.postId;
+  const isPinned = post.isPinned;
+  const response = await apiClient.post(
+    `${BASE_URL}/pin/${id}?isPinned=${isPinned}`
+  );
+  return response.data;
+};

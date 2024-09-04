@@ -4,10 +4,12 @@ import { Post, PostUpdate } from "../types/postTypes";
 import { useCreatePost } from "../hooks/useCreatePost";
 import { useUpdatePost } from "../hooks/useUpdatePost";
 import { useDeletePost } from "../hooks/useDeletePost";
+
 import { PostContextProps } from "../types/props";
+import { usePinPost } from "../hooks/usePinPost";
 
 export const PostsContext = createContext<PostContextProps | undefined>(
-  undefined,
+  undefined
 );
 
 export function PostsProvider({ children }: { children: ReactNode }) {
@@ -16,6 +18,7 @@ export function PostsProvider({ children }: { children: ReactNode }) {
   const { handleCreatePost } = useCreatePost();
   const { handleUpdatePost } = useUpdatePost();
   const { handleDeletePost } = useDeletePost();
+  const { handlePinPost } = usePinPost();
 
   const value = useMemo(() => {
     function previousPage(): void {
@@ -41,6 +44,10 @@ export function PostsProvider({ children }: { children: ReactNode }) {
       await handleDeletePost(postId);
       refetchPosts();
     }
+    async function pinPost(post: Post): Promise<void> {
+      await handlePinPost(post);
+      refetchPosts();
+    }
 
     return {
       posts,
@@ -53,6 +60,7 @@ export function PostsProvider({ children }: { children: ReactNode }) {
       page,
       goToPreviousPage: previousPage,
       goToNextPage: nextPage,
+      pinPost,
     };
   }, [
     posts,
@@ -64,6 +72,7 @@ export function PostsProvider({ children }: { children: ReactNode }) {
     handleDeletePost,
     handleUpdatePost,
     handleCreatePost,
+    handlePinPost,
   ]);
 
   return (

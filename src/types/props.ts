@@ -18,6 +18,7 @@ export interface PostContextProps {
   createPost: (post: PostUpdate) => Promise<Post>;
   updatePost: (post: PostUpdate) => Promise<Post>;
   deletePost: (postId: number) => Promise<void>;
+  pinPost: (post: PostUpdate) => Promise<void>;
   refetchPosts: () => void;
   page: number | undefined;
   goToPreviousPage: () => void;

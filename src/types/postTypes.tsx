@@ -15,6 +15,7 @@ export interface Post {
   updatedAt?: string;
   tagNames: string[];
   taggedUsernames: string[];
+  isPinned?: boolean;
 }
 
 export interface PostUpdate {
@@ -26,6 +27,7 @@ export interface PostUpdate {
   updatedAt?: string;
   tagNames?: string[];
   taggedUserIds?: number[];
+  isPinned?: boolean;
 }
 
 export interface PostProps {
