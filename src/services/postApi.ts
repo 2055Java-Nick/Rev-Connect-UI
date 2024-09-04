@@ -1,49 +1,51 @@
-import axios from "axios";
+import { PostUpdate } from "../types/postTypes";
+import apiClient from "./api";
+import { handleApiResponse } from "./responseHandler";
 
-const BASE_URL = import.meta.env.VITE_API_URL; // This pulls the base URL from your .env file
+const BASE_URL = "/posts";
 
-export const createPost = async (formData: FormData) => {
-  const response = await axios.post(`${BASE_URL}/post`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  return response.data;
-};
+/**
+ * Creates a new post.
+ *
+ * @param post - The post object containing title, content, etc.
+ * @returns The Api response containing the newly created post.
+ * @throws ApiError if the request fails.
+ */
+export async function createPost(post: PostUpdate) {
+  const response = await apiClient.post(`${BASE_URL}`, post);
+  return handleApiResponse(response);
+}
 
 export const getPostById = async (id: number) => {
-  const response = await axios.get(`${BASE_URL}/post/${id}`);
-  return response.data;
+  const response = await apiClient.get(`${BASE_URL}/${id}`);
+  return handleApiResponse(response);
 };
 
-export const updatePostById = async (
-  id: number,
-  title: string,
-  content: string
-) => {
-  const response = await axios.patch(`${BASE_URL}/post/${id}`, {
-    title,
-    content,
-  });
-  return response.data;
+export const updatePost = async (post: PostUpdate) => {
+  const response = await apiClient.put(`${BASE_URL}/${post.postId}`, post);
+  return handleApiResponse(response);
 };
 
 export const deletePostById = async (id: number) => {
-  const response = await axios.delete(`${BASE_URL}/post/${id}`);
-  return response.data;
+  const response = await apiClient.delete(`${BASE_URL}/${id}`);
+  return handleApiResponse(response);
 };
 
 export const getPostsByPage = async (page: number) => {
-  const response = await axios.get(`${BASE_URL}/post?page=${page}`);
-  return response.data;
+  const response = await apiClient.get(`${BASE_URL}/recent?page=${page}`);
+  return handleApiResponse(response);
 };
 
 export const getMediaByPostId = async (postId: number) => {
-  const response = await axios.get(`${BASE_URL}/post/media/${postId}`);
-  return response.data;
+  const response = await apiClient.get(`${BASE_URL}/media/${postId}`);
+  return handleApiResponse(response);
 };
 
-export const updatePostPin = async (id: number, formData: FormData) => {
-  const response = await axios.post(`${BASE_URL}/pin/${id}`, formData);
+export const updatePostPin = async (post: PostUpdate) => {
+  const id = post.postId;
+  const isPinned = post.isPinned;
+  const response = await apiClient.post(
+    `${BASE_URL}/pin/${id}?isPinned=${isPinned}`
+  );
   return response.data;
 };

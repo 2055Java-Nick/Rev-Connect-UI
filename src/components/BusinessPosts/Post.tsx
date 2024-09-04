@@ -1,47 +1,44 @@
-import React from "react";
-import { Media, PostProps } from "../../types/postTypes";
+import React, { FormEvent, useState } from "react";
+import { PostProps, PostUpdate } from "../../types/postTypes";
+import { usePostsContext } from "../../hooks/usePostsContext";
 import { IconButton } from "@mui/material";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined"; // need to run ' npm install @mui/icons-material ' or will give errors
 
-const Post: React.FC<PostProps> = ({
-  post,
-  media,
-  onEdit,
-  onDelete,
-  onPin,
-  isEditing,
-  editTitle,
-  editContent,
-  setEditTitle,
-  setEditContent,
-  handleUpdate,
-}) => {
-  const renderMedia = (mediaList: Media[]) => {
-    return mediaList.map((mediaItem) => {
-      const imageUrl = `http://localhost:8080/attachments/${
-        mediaItem.mediaUrl
-      }?${new Date().getTime()}`;
-      if (mediaItem.mediaType === "IMAGE") {
-        return (
-          <img
-            key={mediaItem.mediaId.toString()}
-            src={imageUrl}
-            alt="Post Media"
-            className="img-fluid my-2"
-          />
-        );
-      } else if (mediaItem.mediaType === "VIDEO") {
-        return (
-          <video key={mediaItem.mediaId.toString()} controls className="w-100">
-            <source src={imageUrl} type="video/mp4" />
-          </video>
-        );
-      }
-      return null;
-    });
-  };
+const Post: React.FC<PostProps> = ({ post }) => {
+  const { updatePost, deletePost, pinPost } = usePostsContext(); //add pinPost method later
 
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [title, setTitle] = useState<string | undefined>(post.title);
+  const [content, setContent] = useState<string | undefined>(post.content);
+  const [isPinned, setIsPinned] = useState<boolean | undefined>(post.isPinned);
+
+  async function handleSave(e: FormEvent) {
+    e.preventDefault();
+    const updatedPost = {
+      ...post,
+      title,
+      content,
+      taggedUserIds: [],
+      tagNames: [],
+    } as PostUpdate;
+
+    await updatePost(updatedPost);
+    setIsEditing(false);
+  }
+  async function handlePinPost() {
+    setIsPinned(!isPinned);
+    const updatedPost = {
+      ...post,
+      title,
+      content,
+      taggedUserIds: [],
+      tagNames: [],
+      isPinned,
+    };
+
+    await pinPost(post);
+  }
   return (
     <div className="card mb-3">
       <div className="card-body">
@@ -55,30 +52,26 @@ const Post: React.FC<PostProps> = ({
             />
             <div>
               <h5 className="card-title mb-0">{post.title}</h5>
-              <small className="text-muted">
-                {new Date(post.createdAt).toLocaleString()}
-              </small>
+              <small className="text-muted">{post.createdAt}</small>
             </div>
           </div>
           <div>
             <button
-              onClick={() => onEdit(post.postId, post.title, post.content)}
+              onClick={() => setIsEditing(!isEditing)}
               className="btn btn-sm btn-outline-primary me-2"
               title="Edit Post"
             >
               ✎
             </button>
             <button
-              onClick={() => onDelete(post.postId)}
+              onClick={() => deletePost(post.postId)}
               className="btn btn-sm btn-outline-danger"
               title="Delete Post"
             >
               🗑️
             </button>
             <IconButton
-              onClick={() =>
-                onPin(post.postId, post.isPinned ? "false" : "true")
-              }
+              onClick={handlePinPost}
               title={post.isPinned ? "Unpin Post" : "Pin Post"} // Change title based on state
             >
               {post.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />}
@@ -86,7 +79,6 @@ const Post: React.FC<PostProps> = ({
           </div>
         </div>
         <p className="card-text">{post.content}</p>
-        {media && renderMedia(media)}
         {post.updatedAt && (
           <small className="text-muted">
             Updated at: {new Date(post.updatedAt).toLocaleString()}
@@ -96,7 +88,7 @@ const Post: React.FC<PostProps> = ({
 
       {isEditing && (
         <div className="card-footer">
-          <form onSubmit={handleUpdate}>
+          <form onSubmit={(e) => handleSave(e)}>
             <div className="mb-3">
               <label htmlFor="editTitle" className="form-label">
                 New Title:
@@ -104,8 +96,8 @@ const Post: React.FC<PostProps> = ({
               <input
                 id="editTitle"
                 type="text"
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
+                defaultValue={post.title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
                 className="form-control"
               />
@@ -116,8 +108,8 @@ const Post: React.FC<PostProps> = ({
               </label>
               <textarea
                 id="editContent"
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
+                defaultValue={post.content}
+                onChange={(e) => setContent(e.target.value)}
                 required
                 className="form-control"
               />

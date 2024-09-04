@@ -8,24 +8,28 @@ export interface Media {
 
 export interface Post {
   postId: number;
-  userId: number;
+  authorId: number;
   title: string;
   content: string;
-  createdAt: string;
+  createdAt?: string;
   updatedAt?: string;
-  isPinned: boolean;
+  tagNames: string[];
+  taggedUsernames: string[];
+  isPinned?: boolean;
+}
+
+export interface PostUpdate {
+  postId?: number;
+  authorId: number;
+  title: string;
+  content: string;
+  createdAt?: string;
+  updatedAt?: string;
+  tagNames?: string[];
+  taggedUserIds?: number[];
+  isPinned?: boolean;
 }
 
 export interface PostProps {
   post: Post;
-  media: Media[];
-  onEdit: (postId: number, title: string, content: string) => void;
-  onDelete: (postId: number) => void;
-  isEditing: boolean;
-  editTitle: string;
-  editContent: string;
-  setEditTitle: (title: string) => void;
-  setEditContent: (content: string) => void;
-  handleUpdate: (event: React.FormEvent) => void;
-  onPin: (postId: number, isPinned: String) => void;
 }

@@ -2,6 +2,7 @@ import axios from "axios";
 import log from "loglevel";
 
 import { ApiError } from "./errors";
+import { redirect } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -36,9 +37,20 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.reponse) {
+      const statusCode = error.response.status;
+      let message = error.response.data?.message || "An error occured";
+
+      if (statusCode === 401) {
+        message = "Unauthorized access - please log in.";
+        redirect("/login");
+      }
+      if (statusCode === 403) {
+        message = "You do not have permission to perform this action.";
+      }
+
       const apiError = new ApiError(
-        error.response.data?.message || "Ooops, an error occured",
-        error.response.status,
+        message || "Ooops, an error occured",
+        statusCode,
         error.response.data?.details
       );
       return Promise.reject(apiError);
@@ -48,6 +60,7 @@ apiClient.interceptors.response.use(
 );
 
 // logging if needed
+// TODO: remove in production, or setLevel("WARN") and log errors
 log.setLevel("INFO"); // set logging level to info
 
 apiClient.interceptors.response.use(

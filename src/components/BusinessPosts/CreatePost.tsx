@@ -1,38 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPost, getPostById } from "../../services/postApi";
+import { usePostsContext } from "../../hooks/usePostsContext";
+import { Post, PostUpdate } from "../../types/postTypes";
+import { ApiError } from "../../services/errors";
 
-const CreatePost: React.FC = () => {
+export default function CreatePost() {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<ApiError | null>(null);
+  const [createdPost, setCreatedPost] = useState<Post | null>(null);
+  const { createPost } = usePostsContext();
+
   const navigate = useNavigate();
 
-  const handleCreate = async (event: React.FormEvent) => {
-    event.preventDefault();
-
+  async function handleCreate(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      const formData = new FormData();
-      formData.append("title", newTitle);
-      formData.append("content", newContent);
-      formData.append("userId", "1");
-      if (file) {
-        formData.append("file", file);
-      }
-      const newPost = await createPost(formData);
-      const fetchPost = await getPostById(newPost.postId);
-      console.log("Post created:", fetchPost);
-      setNewTitle("");
-      setNewContent("");
-      setFile(null);
-      // Adding a small delay before navigation to render the images
-      setTimeout(() => {
-        navigate("/posts");
-      }, 500);
+      const newPost = {
+        title: newTitle,
+        authorId: 1,
+        content: newContent,
+        tagNames: [],
+        taggedUserIds: [],
+      } as PostUpdate;
+
+      const response = await createPost(newPost);
+      setCreatedPost(response);
     } catch (error) {
-      console.error("Error creating post:", error);
+      setError(error as ApiError);
+      throw error;
+    } finally {
+      setLoading(false);
     }
-  };
+  }
+
+  useEffect(() => {
+    if (createdPost) {
+      navigate("/posts/" + createdPost.postId);
+    }
+  }, [createdPost, navigate]);
+
+  if (error) return <>{error.message}</>;
+  if (loading) return <>Loading...</>;
 
   return (
     <div className="create-post-container">
@@ -57,21 +69,10 @@ const CreatePost: React.FC = () => {
             required
           />
         </div>
-        <div>
-          <label htmlFor="fileInput">Media (Image/Video):</label>
-          <input
-            id="fileInput"
-            type="file"
-            accept="image/*,video/*"
-            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-          />
-        </div>
         <button type="submit" className="btn">
           Create Post
         </button>
       </form>
     </div>
   );
-};
-
-export default CreatePost;
+}
